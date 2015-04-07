@@ -1,0 +1,295 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package dao;
+
+import controller.SignUpController;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import model.UserBean;
+
+/**
+ *
+ * @author it3530219
+ */
+public class UserDAOImpl implements UserDAO {
+
+    @Override
+    public int createAccount(UserBean aSignUp) {
+
+        try {
+            Class.forName("org.apache.derby.jdbc.ClientDriver");
+        } catch (ClassNotFoundException e) {
+            System.err.println(e.getMessage());
+            System.exit(0);
+        }
+
+        int rowCount = 0;
+        int rowCountLogin = 0;
+        try {
+            String myDB = "jdbc:derby://localhost:1527/IT353";
+            Connection DBConn = DriverManager.getConnection(myDB, "itkstu", "student");
+
+            String insertString;
+            Statement stmt = DBConn.createStatement();
+            insertString = "INSERT INTO IT353.Users VALUES ('"
+                    + aSignUp.getFirstName()
+                    + "','" + aSignUp.getLastName()
+                    + "','" + aSignUp.getUserName()
+                    + "','" + aSignUp.getPassword()
+                    + "','" + aSignUp.getEmail()
+                    + "','" + aSignUp.getSecurityQuestion()
+                    + "','" + aSignUp.getSecurityAnswer()
+                    + "')";
+
+            rowCount = stmt.executeUpdate(insertString);
+            System.out.println("insert string =" + insertString);
+
+            String insertLoginString = "INSERT INTO IT353.Login VALUES ('"
+                    + aSignUp.getUserName()
+                    + "','" + aSignUp.getPassword()
+                    + "')";
+
+            rowCountLogin = stmt.executeUpdate(insertLoginString);
+            System.out.println("LoginInfo insert string =" + insertLoginString);
+            System.out.println(rowCountLogin + " row(s) inserted");
+            DBConn.close();
+
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+        return rowCount;
+    }
+
+    @Override
+    public int checkUserName(String userName) {
+        String query = "SELECT COUNT(*) AS USERCOUNT FROM IT353.Users ";
+        query += "WHERE userid  = '" + userName + "'";
+
+        int existingUserCount = 0;
+        Connection DBConn = null;
+        try {
+            DBHelper.loadDriver("org.apache.derby.jdbc.ClientDriver");
+            // if doing the above in Oracle: DBHelper.loadDriver("oracle.jdbc.driver.OracleDriver");
+            String myDB = "jdbc:derby://localhost:1527/IT353";
+            // if doing the above in Oracle:  String myDB = "jdbc:oracle:thin:@oracle.itk.ilstu.edu:1521:ora478";
+            DBConn = DBHelper.connect2DB(myDB, "itkstu", "student");
+            // With the connection made, create a statement to talk to the DB server.
+            // Create a SQL statement to query, retrieve the rows one by one (by going to the
+            // columns), and formulate the result string to send back to the client.
+            Statement stmt = DBConn.createStatement();
+            ResultSet rs = stmt.executeQuery(query);
+            while (rs.next()) {
+                existingUserCount = Integer.parseInt(rs.getString("USERCOUNT"));
+            }
+
+        } catch (Exception e) {
+            System.err.println("ERROR: Problems with SQL select");
+            e.printStackTrace();
+        }
+        try {
+            DBConn.close();
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+        return existingUserCount;
+    }
+
+    @Override//not yet used
+    public String retrieveAccount(String userName) {
+        String query = "SELECT PASSWORD AS PWD FROM IT353.Login ";
+        query += "WHERE userid  = '" + userName + "'";
+
+        String password = null;
+        Connection DBConn = null;
+        try {
+            DBHelper.loadDriver("org.apache.derby.jdbc.ClientDriver");
+            // if doing the above in Oracle: DBHelper.loadDriver("oracle.jdbc.driver.OracleDriver");
+            String myDB = "jdbc:derby://localhost:1527/IT353";
+            // if doing the above in Oracle:  String myDB = "jdbc:oracle:thin:@oracle.itk.ilstu.edu:1521:ora478";
+            DBConn = DBHelper.connect2DB(myDB, "itkstu", "student");
+            // With the connection made, create a statement to talk to the DB server.
+            // Create a SQL statement to query, retrieve the rows one by one (by going to the
+            // columns), and formulate the result string to send back to the client.
+            Statement stmt = DBConn.createStatement();
+            ResultSet rs = stmt.executeQuery(query);
+            while (rs.next()) {
+                password = rs.getString("PWD");
+            }
+
+        } catch (Exception e) {
+            System.err.println("ERROR: Problems with SQL select");
+            e.printStackTrace();
+        }
+        try {
+            DBConn.close();
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+        return password;
+    }
+
+    @Override
+    public int findAccount(UserBean aLogin) {
+        String userName = aLogin.getUserName();
+        String password = aLogin.getPassword();
+
+        String query = "SELECT COUNT(*) AS USERCOUNT FROM IT353.Login ";
+        query += "WHERE userid  = '" + userName + "' AND password = '" + password + "'";
+
+        int accountsCount = 0;
+        Connection DBConn = null;
+        try {
+            DBHelper.loadDriver("org.apache.derby.jdbc.ClientDriver");
+            // if doing the above in Oracle: DBHelper.loadDriver("oracle.jdbc.driver.OracleDriver");
+            String myDB = "jdbc:derby://localhost:1527/IT353";
+            // if doing the above in Oracle:  String myDB = "jdbc:oracle:thin:@oracle.itk.ilstu.edu:1521:ora478";
+            DBConn = DBHelper.connect2DB(myDB, "itkstu", "student");
+            // With the connection made, create a statement to talk to the DB server.
+            // Create a SQL statement to query, retrieve the rows one by one (by going to the
+            // columns), and formulate the result string to send back to the client.
+            Statement stmt = DBConn.createStatement();
+            ResultSet rs = stmt.executeQuery(query);
+            while (rs.next()) {
+                accountsCount = Integer.parseInt(rs.getString("USERCOUNT"));
+            }
+
+        } catch (Exception e) {
+            System.err.println("ERROR: Problems with SQL select");
+            e.printStackTrace();
+        }
+        try {
+            DBConn.close();
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+        return accountsCount;
+
+    }
+
+    @Override
+    public ArrayList findByUserName(String uName) {
+        // if interested in matching wild cards, use: LIKE and '%" + aName + "%'";
+        String query = "SELECT * FROM IT353.Users ";
+        query += "WHERE userid = '" + uName + "'";
+
+        ArrayList aUserData = selectProfilesFromDB(query);
+        return aUserData;
+    }
+
+    private ArrayList selectProfilesFromDB(String query) {
+        ArrayList aProjectBeanCollection = new ArrayList();
+        Connection DBConn = null;
+        try {
+            DBHelper.loadDriver("org.apache.derby.jdbc.ClientDriver");
+            // if doing the above in Oracle: DBHelper.loadDriver("oracle.jdbc.driver.OracleDriver");
+            String myDB = "jdbc:derby://localhost:1527/IT353";
+            // if doing the above in Oracle:  String myDB = "jdbc:oracle:thin:@oracle.itk.ilstu.edu:1521:ora478";
+            DBConn = DBHelper.connect2DB(myDB, "itkstu", "student");
+
+            // With the connection made, create a statement to talk to the DB server.
+            // Create a SQL statement to query, retrieve the rows one by one (by going to the
+            // columns), and formulate the result string to send back to the client.
+            Statement stmt = DBConn.createStatement();
+            ResultSet rs = stmt.executeQuery(query);
+
+            String firstName, lastName, userName, password, email, securityQuestion, securityAnswer, reasonForAccount;
+            UserBean aProjectBean;
+            while (rs.next()) {
+                // 1. if a float (say PRICE) is to be retrieved, use rs.getFloat("PRICE");
+                // 2. Instead of using column name, can alternatively use: rs.getString(1); // not 0
+                firstName = rs.getString("firstname");
+                lastName = rs.getString("lastname");
+                userName = rs.getString("userid");
+                password = rs.getString("password");
+                email = rs.getString("email");
+                securityQuestion = rs.getString("security_qn");
+                securityAnswer = rs.getString("security_ans");
+                reasonForAccount = rs.getString("account_reason");
+
+                // make a ProfileBean object out of the values
+                aProjectBean = new UserBean(firstName, lastName, userName, password, email, securityQuestion, securityAnswer, reasonForAccount);
+                // add the newly created object to the collection
+                aProjectBeanCollection.add(aProjectBean);
+            }
+            rs.close();
+            stmt.close();
+        } catch (Exception e) {
+            System.err.println("ERROR: Problems with SQL select");
+            e.printStackTrace();
+        }
+        try {
+            DBConn.close();
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+        return aProjectBeanCollection;
+    }
+
+    @Override
+    public int updateProfile(UserBean anUpdate) {
+
+        
+        Connection DBConn = null;
+        try {
+            Class.forName("org.apache.derby.jdbc.ClientDriver");
+        } catch (ClassNotFoundException e) {
+            System.err.println(e.getMessage());
+            System.exit(0);
+        }
+        int rowCount = 0;
+        int rowCount2 = 0;
+        try {
+            String myDB = "jdbc:derby://localhost:1527/IT353";
+            DBConn = DriverManager.getConnection(myDB, "itkstu", "student");
+
+            String updateString,updateString2;
+            Statement stmt = DBConn.createStatement();
+            
+            String fname=anUpdate.getFirstName();
+            String lname = anUpdate.getLastName();
+            String uid = anUpdate.getUserName();
+            String pwd = anUpdate.getPassword();
+            String email = anUpdate.getEmail();
+            String secQn = anUpdate.getSecurityQuestion();
+            String secAns = anUpdate.getSecurityAnswer();
+            
+            // SQL UPDATE Syntax [http://www.w3schools.com]:
+            // UPDATE table_name
+            // SET column1=value, column2=value2,...
+            // WHERE some_column=some_value
+            // Note: Notice the WHERE clause in the UPDATE syntax. The WHERE clause specifies which record or records that should be updated. If you omit the WHERE clause, all records will be updated!
+            updateString = "UPDATE IT353.Users SET "
+                    + "firstname = '" + fname + "', "
+                    + "lastname = '" + lname + "', "
+                    + "password = '" + pwd + "', "
+                    + "email = '" + email + "', "
+                    + "security_qn = '" + secQn + "', "
+                    + "security_ans = '" + secAns + "' "
+                    + "WHERE userid = '" + uid + "'";
+            rowCount = stmt.executeUpdate(updateString);
+            System.out.println("updateString =" + updateString);
+
+            
+                updateString2 = "UPDATE IT353.LOGIN SET "
+                        + "lastname = '" + pwd + "' "
+                        + "WHERE userid = '" + uid + "'";
+                rowCount2 = stmt.executeUpdate(updateString2);
+                System.out.println("updateString2 =" + updateString2);
+            
+            DBConn.close();
+
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+        // if insert is successful, rowCount will be set to 1 (1 row inserted successfully). Else, insert failed.
+        return rowCount;
+    }
+
+}
