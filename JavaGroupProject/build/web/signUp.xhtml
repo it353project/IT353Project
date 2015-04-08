@@ -9,37 +9,34 @@
         <title>Sign-Up Page</title>
     </h:head>
     <h:body>
-        <ui:composition template="masterTemplate.xhtml">
-            <ui:define name="content">
+  
                 <br/><br/><center><h2>Create new Account</h2></center>
-                <div id="login" style ="width:400px; height:350px; margin: 0 auto; margin-top: 50px; margin-bottom: 50px; border: 1px solid #000; background-color: #EAEBD8">
-                    <center>
-                        <br/><br/><br/>
+                
                         <h:form id="signUpForm"> 
                             <p:inputText placeholder="First Name" id="firstNameID" value="#{signUpController.theModel.firstName}"/> <br/> <br/>
                             <p:inputText placeholder="Last Name" id="lastNameID" /> <br/> <br/>
                             <p:inputText placeholder="ULID" id="ulidID" /> <br/> <br/>
                             <p:password placeholder="Password" id="passwordID"  /> <br/> <br/>
                             <p:inputText placeholder="ulid@ilstu.edu" id="emailID"/> <br/> <br/>
+
                             <p:selectOneMenu id="accountTypeID"  style="width: 195px" >
                                 <f:selectItem itemLabel="Account Type" itemValue=""/>
                                 <f:selectItem itemLabel="Student Account" itemValue="student"/>
                                 <f:selectItem itemLabel="Admin Account" itemValue="admin"/>
                             </p:selectOneMenu> <br/> <br/>
                             
-                            
-                            
-                            <p:commandButton value="Next" id="nextPageID" style="width: 200px" action="#{signUpController.authenticatePage1()}"/> <br/> <br/>
                             <div>
-                            <font color="red">
-                                <em>                           
-                                    <h:outputText id="signUpResult" value="#{signUpController.signUpValidaton}" />
-                                </em>
-                            </font>
-                        </div>
-                        </h:form> </center>
-                </div>
-            </ui:define>
-        </ui:composition>
+                                <font color="red">
+                                    <em>                           
+                                        <h:outputText id="resultStr" value="#{signUpController.signUpValidaton}" />
+                                    </em>
+                                </font>
+                            </div>
+
+
+                            <p:commandButton value="Next" id="nextPageID" style="width: 200px" action="#{signUpController.authenticatePage1()}"/> <br/> <br/>
+
+                        </h:form> 
+
     </h:body>
 </html>

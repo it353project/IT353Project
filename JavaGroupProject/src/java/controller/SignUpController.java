@@ -137,27 +137,22 @@ public class SignUpController {
     }
     
     public String authenticatePage1(){
-        String validationMessage = null;
+        String validationMessage = "";    
         String first = theModel.getFirstName();
-        System.out.println("first="+first);
-        System.out.println("length="+first.length());
-        signUpValidaton="hello";
+        
         if(first.length()==0){
            signUpValidaton = "The first name field cannot be left blank. Please enter your first name"; 
-           System.out.println("in length 0");
+           
         }
         else if(first.length()<2 || first.length()>25){
             signUpValidaton = "Your first name has to be between 2 and 25 letters long";
-            System.out.println("in 2");
+            
         }
         else{
             signUpValidaton = "";
             validationMessage = "signUpPage2.xhtml";
         }
-        System.out.println(signUpValidaton);
         return validationMessage;
-//        return "signUpPage2.xhtml";
-
     }
     
     public String authenticate(){
