@@ -21,6 +21,7 @@ public class UserBean {
     private String securityQuestion;
     private String securityAnswer;
     private String reasonForAccount;
+    private String accountJustification;
     private String isLoggedIn;
     
     /** Creates a new instance of SignUpBean */
@@ -186,6 +187,9 @@ public class UserBean {
      * @param reasonForAccount the reasonForAccount to set
      */
     public void setReasonForAccount(String reasonForAccount) {
+        if(reasonForAccount.contains("'")){
+            reasonForAccount = reasonForAccount.replace("'", "''");
+        }
         this.reasonForAccount = reasonForAccount;
     }
 
@@ -201,6 +205,20 @@ public class UserBean {
      */
     public void setIsLoggedIn(String isLoggedIn) {
         this.isLoggedIn = isLoggedIn;
+    }
+
+    /**
+     * @return the accountJustification
+     */
+    public String getAccountJustification() {
+        return accountJustification;
+    }
+
+    /**
+     * @param accountJustification the accountJustification to set
+     */
+    public void setAccountJustification(String accountJustification) {
+        this.accountJustification = accountJustification;
     }
 
  

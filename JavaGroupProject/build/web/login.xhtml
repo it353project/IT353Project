@@ -13,8 +13,7 @@
             <ui:define name="content">
                                 
                 <div id="login" style ="width:400px; height:200px; margin: 0 auto; margin-top: 50px; margin-bottom: 50px; border: 1px solid #000; background-color: #EAEBD8">
-                    <!--<h:p-->
-                    
+                                       
                     <center><h3>Log In to Your Account</h3>
                     <br/>
 
@@ -31,7 +30,7 @@
                             </font>
                         </div>
 
-                        <h:commandButton value="Log In" id="submitID" action="#{loginController.authenticateUser()}"/> <br/> <br/>
+                        <p:commandButton value="Log In" id="submitID" style="width: 200px" action="#{loginController.authenticateUser()}"/> <br/> <br/>
                         <h:link value="Forgot Your Password?" outcome="lostPassword.xhtml" /> 
                         
                     </h:form> </center>

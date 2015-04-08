@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package controller;
 
 import dao.UserDAO;
@@ -26,14 +25,15 @@ import model.UserBean;
 @ManagedBean
 @SessionScoped
 public class LoginController {
+
     private String response;
     private String loginValidaton;
     private UserBean theModel;
     private int attemptCount;
-    
+
     public LoginController() {
         theModel = new UserBean();
-        attemptCount=1;
+        attemptCount = 1;
     }
 
     /**
@@ -78,54 +78,46 @@ public class LoginController {
     public void setTheModel(UserBean theModel) {
         this.theModel = theModel;
     }
-    
-    public String authenticateUser(){
+
+    public String authenticateUser() {
         String validationMessage = null;
-        
+
         String uid = theModel.getUserName();
         String pwd = theModel.getPassword();
-        
-        if(uid.length()==0){
-           loginValidaton = "Please enter your ULID to login"; 
-        }
-        else if(pwd.length()==0){
-           loginValidaton = "Please enter your password."; 
-        }
-        else{
+
+        if (uid.length() == 0) {
+            loginValidaton = "Please enter your ULID to login";
+        } else if (pwd.length() == 0) {
+            loginValidaton = "Please enter your password.";
+        } else {
             loginValidaton = "";
             validationMessage = findAccount();
         }
         return validationMessage;
     }
-    
-     public String findAccount() {
-         
+
+    public String findAccount() {
+
         UserDAO aLoginDAO = new UserDAOImpl();
-        if(attemptCount<3){
-        int rowCount = aLoginDAO.findAccount(theModel); // Doing anything with the object after this?
-        if (rowCount >= 1)
-        {
-            theModel.setIsLoggedIn("LoggedIn");
-            attemptCount=0;
-            return "LoginGood.xhtml"; 
+        if (attemptCount < 3) {
+            int rowCount = aLoginDAO.findAccount(theModel); // Doing anything with the object after this?
+            if (rowCount >= 1) {
+                theModel.setIsLoggedIn("LoggedIn");
+                attemptCount = 0;
+                return "LoginGood.xhtml";
+            } else {
+                theModel.setIsLoggedIn("NotLoggedIn");
+                attemptCount++;
+                return "LoginBad.xhtml";
+            }
+        } else {
+            loginValidaton = "You have exceeded your limit of 3 unsuccessful login attempts. "
+                    + "Your account has been temporarily locked.";
+            return logout();
         }
-        else
-        {
-            theModel.setIsLoggedIn("NotLoggedIn");
-            attemptCount++;
-            
-            
-            return "LoginBad.xhtml";
-        }
-        }
-        else {
-                loginValidaton = "You have exceeded your limit of 3 unsuccessful login attempts. "
-                        + "Your account has been tempoarily locked.";
-                return logout();
-        }
-     }
-     
-     public String logout() {
+    }
+
+    public String logout() {
 //        loggedIn = false;
         theModel.setIsLoggedIn("NotLoggedIn");
         theModel.setUserName("");
@@ -133,27 +125,26 @@ public class LoginController {
         return "login.xhtml";
 
     }
-     
-    public String recoverPassword(){
+
+    public String recoverPassword() {
         String ulid = theModel.getUserName();
         String recoveredPassword;
         UserDAO aRecovery = new UserDAOImpl();
         int rowCount = aRecovery.checkUserName(ulid);
-        if(rowCount<=0){
+        if (rowCount <= 0) {
             loginValidaton = "This ULID is not yet registered in our system. \nPlease sign-up for an account.";
             return "";
-        }
-        else{
-            loginValidaton="A password recovery email has been sent to your ISU email address. "
+        } else {
+            loginValidaton = "A password recovery email has been sent to your ISU email address. "
                     + "Please follow the instructions provided";
             recoveredPassword = aRecovery.retrieveAccount(ulid);
             sendPasswordRecoveryEmail(ulid, recoveredPassword);
             return "login.xhtml";
         }
-        
+
     }
-    
-    public void sendPasswordRecoveryEmail(String uid, String pwd){
+
+    public void sendPasswordRecoveryEmail(String uid, String pwd) {
         // Recipient's email ID needs to be mentioned.
         String to = theModel.getEmail();
         // Sender's email ID needs to be mentioned
@@ -194,7 +185,7 @@ public class LoginController {
         } catch (MessagingException mex) {
             mex.printStackTrace();
         }
-    
+
     }
 
 }
