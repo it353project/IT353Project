@@ -235,7 +235,6 @@ public class UserDAOImpl implements UserDAO {
     @Override
     public int updateProfile(UserBean anUpdate) {
 
-        
         Connection DBConn = null;
         try {
             Class.forName("org.apache.derby.jdbc.ClientDriver");
@@ -249,17 +248,17 @@ public class UserDAOImpl implements UserDAO {
             String myDB = "jdbc:derby://localhost:1527/IT353";
             DBConn = DriverManager.getConnection(myDB, "itkstu", "student");
 
-            String updateString,updateString2;
+            String updateString, updateString2;
             Statement stmt = DBConn.createStatement();
-            
-            String fname=anUpdate.getFirstName();
+
+            String fname = anUpdate.getFirstName();
             String lname = anUpdate.getLastName();
             String uid = anUpdate.getUserName();
             String pwd = anUpdate.getPassword();
             String email = anUpdate.getEmail();
             String secQn = anUpdate.getSecurityQuestion();
             String secAns = anUpdate.getSecurityAnswer();
-            
+
             // SQL UPDATE Syntax [http://www.w3schools.com]:
             // UPDATE table_name
             // SET column1=value, column2=value2,...
@@ -276,13 +275,12 @@ public class UserDAOImpl implements UserDAO {
             rowCount = stmt.executeUpdate(updateString);
             System.out.println("updateString =" + updateString);
 
-            
-                updateString2 = "UPDATE IT353.LOGIN SET "
-                        + "lastname = '" + pwd + "' "
-                        + "WHERE userid = '" + uid + "'";
-                rowCount2 = stmt.executeUpdate(updateString2);
-                System.out.println("updateString2 =" + updateString2);
-            
+            updateString2 = "UPDATE IT353.LOGIN SET "
+                    + "lastname = '" + pwd + "' "
+                    + "WHERE userid = '" + uid + "'";
+            rowCount2 = stmt.executeUpdate(updateString2);
+            System.out.println("updateString2 =" + updateString2);
+
             DBConn.close();
 
         } catch (SQLException e) {

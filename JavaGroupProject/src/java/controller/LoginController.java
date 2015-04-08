@@ -8,8 +8,15 @@ package controller;
 
 import dao.UserDAO;
 import dao.UserDAOImpl;
+import java.util.Properties;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 import model.UserBean;
 
 /**
@@ -125,6 +132,69 @@ public class LoginController {
         theModel.setPassword("");
         return "login.xhtml";
 
+    }
+     
+    public String recoverPassword(){
+        String ulid = theModel.getUserName();
+        String recoveredPassword;
+        UserDAO aRecovery = new UserDAOImpl();
+        int rowCount = aRecovery.checkUserName(ulid);
+        if(rowCount<=0){
+            loginValidaton = "This ULID is not yet registered in our system. \nPlease sign-up for an account.";
+            return "";
+        }
+        else{
+            loginValidaton="A password recovery email has been sent to your ISU email address. "
+                    + "Please follow the instructions provided";
+            recoveredPassword = aRecovery.retrieveAccount(ulid);
+            sendPasswordRecoveryEmail(ulid, recoveredPassword);
+            return "login.xhtml";
+        }
+        
+    }
+    
+    public void sendPasswordRecoveryEmail(String uid, String pwd){
+        // Recipient's email ID needs to be mentioned.
+        String to = theModel.getEmail();
+        // Sender's email ID needs to be mentioned
+        String from = "msabu@ilstu.edu";
+        // Assuming you are sending email from this host
+        String host = "smtp.ilstu.edu";
+        // Get system properties
+        Properties properties = System.getProperties();
+        // Setup mail server
+        properties.setProperty("mail.smtp.host", host);
+        properties.setProperty("mail.user", "yourID"); // if needed
+        properties.setProperty("mail.password", "yourPassword"); // if needed
+        // Get the default Session object.
+        Session session = Session.getDefaultInstance(properties);
+        try {
+            // Create a default MimeMessage object.
+            MimeMessage message = new MimeMessage(session);
+            // Set From: header field of the header.
+            message.setFrom(new InternetAddress(from));
+            // Set To: header field of the header.
+            message.addRecipient(Message.RecipientType.TO,
+                    new InternetAddress(to));
+            // Set Subject: header field
+            message.setSubject("Password Recovery");
+            String messageBody = "Hi,<br><br>We have received your password recovery request. "
+                    + "This email contains the information that you need to log back into your account<br><br>"
+                    + "User Name: " + uid + "<br>"
+                    + "Password: " + pwd + "<br>"
+                    + "Please go back to the login page and try to login with the above credentials. <br>"
+                    + "If you are still unable to access your account, please call 309-309-3099 or email us at xxxx@something.com <br>"
+                    + "<br><br>Best Regards,<br>Tech Support Team<br>";
+            // Send the actual HTML message, as big as you like
+            message.setContent(messageBody,
+                    "text/html");
+            // Send message
+            Transport.send(message);
+            System.out.println("Sent message successfully....");
+        } catch (MessagingException mex) {
+            mex.printStackTrace();
+        }
+    
     }
 
 }
