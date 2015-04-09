@@ -3,74 +3,82 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package controller;
 
-import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
-import javax.faces.context.FacesContext;
-import org.primefaces.event.FileUploadEvent;
-import org.primefaces.model.UploadedFile;
+import javax.faces.bean.SessionScoped;
+import javax.servlet.http.Part;
 
 /**
  *
  * @author it3530219
  */
 @ManagedBean
+@SessionScoped
 public class UploadController {
-    private String destination="H:\\tmp\\";
-     UploadedFile file;
- 
-    public UploadedFile getFile() {
-        return file;
-    }
- 
-    public void setFile(UploadedFile file) {
-        this.file = file;
-    }
- 
-    public void fileUploadListener(FileUploadEvent event){
-        // Get uploaded file from the FileUploadEvent
-        this.file = event.getFile();
-        // Print out the information of the file
-        System.out.println("Uploaded File Name Is :: "+file.getFileName()+" :: Uploaded File Size :: "+file.getSize());
-        try {
-            copyFile(event.getFile().getFileName(), event.getFile().getInputstream());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-    
-    public void copyFile(String fileName, InputStream in) {
-           try {
-              
-              
-                // write the inputStream to a FileOutputStream
-                OutputStream out = new FileOutputStream(new File(destination + fileName));
-              
-                int read = 0;
-                byte[] bytes = new byte[1024];
-              
-                while ((read = in.read(bytes)) != -1) {
-                    out.write(bytes, 0, read);
-                }
-              
-                in.close();
-                out.flush();
-                out.close();
-              
-                System.out.println("New file created!");
-                } catch (IOException e) {
-                System.out.println(e.getMessage());
-                }
+//    private String destination="H:\\tmp\\";
+//     UploadedFile file;
+
+//    public UploadedFile getFile() {
+//        return file;
+//    }
+//    public void setFile(UploadedFile file) {
+//        this.file = file;
+//    }
+    private String uploadResult;
+    private Part file1;
+//    private Part file2;
+
+    public Part getFile1() {
+        return file1;
     }
 
- 
-    
+    public void setFile1(Part file1) {
+        this.file1 = file1;
+    }
+
+//    public Part getFile2() {
+//        return file2;
+//    }
+//
+//    public void setFile2(Part file2) {
+//        this.file2 = file2;
+//    }
+
+    public String upload() throws IOException {
+        
+        file1.write(getFilename(file1));
+//        System.out.println("inputstream= "+file1.getInputStream().toString());
+//        file2.write("H:\\data\\"+getFilename(file2));
+        uploadResult = "File Uploaded Successfully.";
+        return "";
+    }
+
+    private static String getFilename(Part part) {
+        for (String cd : part.getHeader("content-disposition").split(";")) {
+            if (cd.trim().startsWith("filename")) {
+                String filename = cd.substring(cd.indexOf('=') + 1).trim().replace("\"", "");
+                return filename.substring(filename.lastIndexOf('/') + 1).substring(filename.lastIndexOf('\\') + 1); // MSIE fix.
+            }
+        }
+        return null;
+    }
+
+    /**
+     * @return the uploadResult
+     */
+    public String getUploadResult() {
+        return uploadResult;
+    }
+
+    /**
+     * @param uploadResult the uploadResult to set
+     */
+    public void setUploadResult(String uploadResult) {
+        this.uploadResult = uploadResult;
+    }
 
 }

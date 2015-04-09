@@ -14,17 +14,11 @@
                 <center><h3>Upload Thesis</h3> <br/>
                     <div id="login" style ="width:400px; height:200px; margin: 0 auto; margin-top: 50px; margin-bottom: 50px; border: 1px solid #000; background-color: #EAEBD8">
 
-                        <h:form enctype="multipart/form-data" style="width:500px">
-                            <p:fileUpload value="#{uploadController.file}" mode="advanced"
-                                          fileUploadListener="#{uploadController.fileUploadListener}"></p:fileUpload>
-        </h:form>
+                        <h:form  enctype="multipart/form-data">
+                            <h:inputFile value="#{uploadController.file1}" /><br/>
 
-
-
-
-
-
-
+                            <h:commandButton value="Upload" action="#{uploadController.upload()}"/>
+                        </h:form>
                     </div></center>
             </ui:define>
         </ui:composition>
