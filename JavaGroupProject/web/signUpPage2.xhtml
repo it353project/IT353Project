@@ -26,15 +26,15 @@
                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 Account Justification:<br/></div>
                             <p:inputTextarea rows="6" cols="22" id="accountReasonID" value="#{signUpController.theModel.accountJustification}"/><br/> <br/>
-                            
+
                             <div>
                                 <font color="red">
                                     <em>                           
                                         <h:outputText id="resultStr" value="#{signUpController.signUpValidaton}" />
                                     </em>
                                 </font>
-                            </div>
-                            <p:commandButton value="Create Account"  id="createAccountID" style="width: 200px" /> <br/> <br/>
+                            </div><br/>
+                            <h:commandButton id="SubmitID" value="Create Account" action="#{signUpController.authenticatePage2()}"/> <br/> <br/>
 
                         </h:form></center>
                 </div>
