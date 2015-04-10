@@ -37,12 +37,14 @@
   <br/><br/>
                         <div id="uploadthesisbutton">
                              <h:inputFile value="#{uploadController.file1}" /> &nbsp;&nbsp;&nbsp;
-                            <h:commandButton value="Upload Thesis" action="#{uploadController.upload()}"/>
+                            <h:commandButton value="Upload Document" action="#{uploadController.upload()}"/>
                             <div><em><br/>
                                     <h:outputText id="resultStr" value="#{uploadController.uploadResult}" /><br/>
                                     <h:commandLink value="#{uploadController.uploadFileName}" action="#{uploadController.uploadLink}"/>
                                 </em></div>
                         </div>
+                        
+                        <h:commandButton value="Submit Thesis" action="#{uploadController.authenticateSubmission()}"/>
                       </h:form>
                 </div></center>
         </ui:define>
