@@ -17,10 +17,10 @@ import javax.servlet.http.Part;
  * @author it3530219
  */
 @ManagedBean
-@SessionScoped
+//@SessionScoped
 public class UploadController {
 //    private String destination="H:\\tmp\\";
-//     UploadedFile file;
+//     private UploadedFile file;
 
 //    public UploadedFile getFile() {
 //        return file;
@@ -30,6 +30,7 @@ public class UploadController {
 //    }
     private String uploadResult;
     private Part file1;
+    private String uploadLink;
 //    private Part file2;
 
     public Part getFile1() {
@@ -51,13 +52,32 @@ public class UploadController {
     public String upload() throws IOException {
         
         file1.write(getFilename(file1));
-//        System.out.println("inputstream= "+file1.getInputStream().toString());
-//        file2.write("H:\\data\\"+getFilename(file2));
-        uploadResult = "File Uploaded Successfully.";
+
+//        file1.write("C:\\data\\"+getFilename(file1));
+        
+//        InputStream inputStream = file1.getInputStream();          
+//        FileOutputStream outputStream = new FileOutputStream(getFilename(file1));  
+//          
+//        byte[] buffer = new byte[4096];          
+//        int bytesRead = 0;  
+//        while(true) {                          
+//            bytesRead = inputStream.read(buffer);  
+//            if(bytesRead > 0) {  
+//                outputStream.write(buffer, 0, bytesRead);
+                uploadResult = "File Uploaded Successfully.";
+                uploadLink = "C:\\java\\glassfish-4.0\\glassfish\\domains\\domain1\\generated\\jsp\\JavaGroupProject\\"+ getFilename(file1);
+//            }else {
+//                uploadResult = "Error uploading file. Please try again.";
+//                break;  
+//            }                         
+//        }  
+//        outputStream.close();  
+//        inputStream.close(); 
+       
         return "";
     }
 
-    private static String getFilename(Part part) {
+    public static String getFilename(Part part) {
         for (String cd : part.getHeader("content-disposition").split(";")) {
             if (cd.trim().startsWith("filename")) {
                 String filename = cd.substring(cd.indexOf('=') + 1).trim().replace("\"", "");
@@ -79,6 +99,20 @@ public class UploadController {
      */
     public void setUploadResult(String uploadResult) {
         this.uploadResult = uploadResult;
+    }
+
+    /**
+     * @return the uploadLink
+     */
+    public String getUploadLink() {
+        return uploadLink;
+    }
+
+    /**
+     * @param uploadLink the uploadLink to set
+     */
+    public void setUploadLink(String uploadLink) {
+        this.uploadLink = uploadLink;
     }
 
 }

@@ -15,9 +15,15 @@
                     <div id="login" style ="width:400px; height:200px; margin: 0 auto; margin-top: 50px; margin-bottom: 50px; border: 1px solid #000; background-color: #EAEBD8">
 
                         <h:form  enctype="multipart/form-data">
-                            <h:inputFile value="#{uploadController.file1}" /><br/>
+                            <h:inputFile value="#{uploadController.file1}" /> &nbsp;&nbsp;&nbsp;
 
                             <h:commandButton value="Upload" action="#{uploadController.upload()}"/>
+                            <div>                            
+                                <em>                           
+                                    
+                                    <h:outputText id="resultStr" value="#{uploadController.uploadResult}" />
+                                </em>                           
+                        </div>
                         </h:form>
                     </div></center>
             </ui:define>
