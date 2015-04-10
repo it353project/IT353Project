@@ -3,7 +3,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:p="http://primefaces.org/ui"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
     <h:head>
         <title>Login Page</title>
     </h:head>
@@ -11,24 +12,42 @@
     <h:body>
         <ui:composition template="masterTemplate.xhtml">
             <ui:define name="content">
-                <center><h3>Upload Thesis</h3> <br/>
-                    <div id="login" style ="width:400px; height:200px; margin: 0 auto; margin-top: 50px; margin-bottom: 50px; border: 1px solid #000; background-color: #EAEBD8">
-
-                        <h:form  enctype="multipart/form-data">
-                            <h:inputFile value="#{uploadController.file1}" /> &nbsp;&nbsp;&nbsp;
-
-                            <h:commandButton value="Upload" action="#{uploadController.upload()}"/>
-                            <div>                            
-                                <em>                           
-                                    
-                                    <h:outputText id="resultStr" value="#{uploadController.uploadResult}" />
-                                </em>                           
+                <center><h2>Upload Thesis</h2> 
+                    <div id="login" style ="width:400px; height:410px; margin: 0 auto; margin-top: 50px; margin-bottom: 50px; border: 1px solid #000; background-color: #EAEBD8">
+                          
+                    <h:form  enctype="multipart/form-data">
+                        <br/><br/>
+                        Course Number    
+                        <p:inputText id="courseNoID"  value=""/><br/><br/>
+                        
+                        Semester Completed
+                        <p:inputText id="semsterID" value=""/><br/><br/>
+                        
+                        Keywords
+                        <p:inputText id="keyWordsID"  value=""/><br/><br/>
+                        
+                        Live Link
+                        <p:inputText id="livelinkID"  value=""/><br/><br/>
+                        
+                        Screencast
+                        <p:inputText id="screencastID"  value=""/><br/><br/>
+                        
+                        Abstract
+                        <p:inputTextarea rows="6" cols="22" id="accountReasonID" value="#{signUpController.theModel.accountJustification}"/>
+  <br/><br/>
+                        <div id="uploadthesisbutton">
+                             <h:inputFile value="#{uploadController.file1}" /> &nbsp;&nbsp;&nbsp;
+                            <h:commandButton value="Upload Thesis" action="#{uploadController.upload()}"/>
+                            <div><em><br/>
+                                    <h:outputText id="resultStr" value="#{uploadController.uploadResult}" /><br/>
+                                    <h:commandLink value="#{uploadController.uploadFileName}" action="#{uploadController.uploadLink}"/>
+                                </em></div>
                         </div>
-                        </h:form>
-                    </div></center>
-            </ui:define>
-        </ui:composition>
+                      </h:form>
+                </div></center>
+        </ui:define>
+    </ui:composition>
 
-    </h:body>
+</h:body>
 
 </html>

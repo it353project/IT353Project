@@ -31,6 +31,7 @@ public class UploadController {
     private String uploadResult;
     private Part file1;
     private String uploadLink;
+    private String uploadFileName;
 //    private Part file2;
 
     public Part getFile1() {
@@ -66,6 +67,7 @@ public class UploadController {
 //                outputStream.write(buffer, 0, bytesRead);
                 uploadResult = "File Uploaded Successfully.";
                 uploadLink = "C:\\java\\glassfish-4.0\\glassfish\\domains\\domain1\\generated\\jsp\\JavaGroupProject\\"+ getFilename(file1);
+                setUploadFileName(getFilename(file1));
 //            }else {
 //                uploadResult = "Error uploading file. Please try again.";
 //                break;  
@@ -113,6 +115,20 @@ public class UploadController {
      */
     public void setUploadLink(String uploadLink) {
         this.uploadLink = uploadLink;
+    }
+
+    /**
+     * @return the uploadFileName
+     */
+    public String getUploadFileName() {
+        return uploadFileName;
+    }
+
+    /**
+     * @param uploadFileName the uploadFileName to set
+     */
+    public void setUploadFileName(String uploadFileName) {
+        this.uploadFileName = uploadFileName;
     }
 
 }
