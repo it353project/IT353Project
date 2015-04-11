@@ -83,11 +83,6 @@ public class SignUpController {
         
         String first = theModel.getFirstName();
         String last = theModel.getLastName();
-        String uid = theModel.getUserName();
-        String pwd = theModel.getPassword();
-        String email = theModel.getEmail();
-        String secQn = theModel.getSecurityQuestion();
-        String secAns = theModel.getSecurityAnswer();
         
         if(first.contains("''")){
             first = first.replace("''", "'");
@@ -95,35 +90,16 @@ public class SignUpController {
         else if(last.contains("''")){
             last = last.replace("''", "'");
         }
-        else if(uid.contains("''")){
-            uid = uid.replace("''", "'");
-        }
-        else if(pwd.contains("''")){
-            pwd = pwd.replace("''", "'");
-        }
-        else if(email.contains("''")){
-            email = email.replace("''", "'");
-        }
-        else if(secQn.contains("''")){
-            secQn = secQn.replace("''", "'");
-        }
-        else if(secAns.contains("''")){
-            secAns = secAns.replace("''", "'");
-        }
         
         String resultStr = "";
         resultStr += "<br/>Hello " + first + " " + last + "," + "<br/><br/>";
-        resultStr += "Thank you for joining our Fan Club! <br/>Your account has been successfully created!" + "<br/>";
-        resultStr += "Please print this page and keep it safe for your future reference.<br/> "
-                + "Below are the details of your new account: <br/><br/>";
-        resultStr += "Name: " + first + " " + last + "<br/>";
-        resultStr += "UserName: " + uid + "<br/>";
-        resultStr += "Password: " + pwd + "<br/>";
-        resultStr += "Email id: " + email + "<br/>";
-        resultStr += "Security Question : " + secQn + "<br/>";
-        resultStr += "Security Answer: " + secAns + "<br/><br/>";
-        resultStr += "Hope your enjoy our services." + "<br/><br/>";
-        resultStr += "Regards, <br/> LadyBird Nature Club Team.";
+        resultStr += "Thank you for signing up with the ISU Thesis Tracker System. <br/>";
+        resultStr += "An email has been sent to the System Admin for "
+                + "review. Admin will review your request and will get get back to you via email within 2 business days. "
+                + "We really appreciate your patience and co-operation. Follow the instructions in the email that you receive for "
+                + "using the thesis tracker system.<br/> "
+                + "Please check the junk folder in your email as well to ensure that you do not miss any emails from the Admin. <br/><br/>";
+        resultStr += "Cheers, <br/> Thesis Tracker Team.";
         response = resultStr;
         
         return response;
@@ -146,10 +122,10 @@ public class SignUpController {
 //        String confPwd = theModel.getConfirmPassword();
         String email = theModel.getEmail();
 
-        String reason = theModel.getReasonForAccount();
+        String type = theModel.getAccountType();
         
-//        UserDAO aSignUpDAO = new UserDAOImpl();
-//        int uidCount = aSignUpDAO.checkUserName(uid);
+        UserDAO aSignUpDAO = new UserDAOImpl();
+        int uidCount = aSignUpDAO.checkUserName(uid);
          
         if(first.length()==0){
            signUpValidaton = "The first name field cannot be left blank. Please enter your first name"; 
@@ -167,11 +143,11 @@ public class SignUpController {
            signUpValidaton = "Your ULID is required to create an account. Please enter your ULID"; 
         }
         else if(uid.length()<2 || uid.length()>7){
-           signUpValidaton = "Invalid ULID. Please enter your ULID."; 
+           signUpValidaton = "Invalid ULID. Please enter your ULID again."; 
         }
-//        else if(uidCount >=1){
-//               signUpValidaton = "The ULID you provided is already registered in this system. Try recovering your password."; 
-//        }
+        else if(uidCount >=1){
+               signUpValidaton = "The ULID you provided is already registered in this system. Try recovering your password."; 
+        }
         else if(pwd.length()==0){
            signUpValidaton = "A password is required to create an account. Please enter a password for your account"; 
         }
@@ -187,7 +163,7 @@ public class SignUpController {
         else if(email.length()==0){
            signUpValidaton = "A valid email address is required to create an account. Please enter your email id"; 
         }
-        else if(reason.length()==0){
+        else if(type.length()==0){
             signUpValidaton = "Please select a type of account your wish to sign up for.";
         }
         else{
@@ -204,9 +180,7 @@ public class SignUpController {
         String secAns = theModel.getSecurityAnswer();
         String justification = theModel.getAccountJustification();
         
-//        UserDAO aSignUpDAO = new UserDAOImpl();
-//        int uidCount = aSignUpDAO.checkUserName(uid);
-         
+    
         if(secQn.length()==0){
            signUpValidaton = "Please select a security question for account recovery processes."; 
         }
@@ -218,21 +192,36 @@ public class SignUpController {
         }
         else{
             signUpValidaton = "";
-            validationMessage = "LoginGood.xhtml";
-//            validationMessage = createAccount();
-            sendEmailForApproval();
+//            validationMessage = "signUpConfirmation.xhtml";
+            validationMessage = createAccount();
+//            sendEmailForApproval();
         }
         return validationMessage;
         
     }
     
-
+        public String createAccount() {
+        UserDAO aSignUpDAO = new UserDAOImpl();    // Creating a new object each time.
+        int rowCount = aSignUpDAO.createAccount(theModel); // Doing anything with the object after this?
+        if (rowCount == 1)
+        {
+            theModel.setIsLoggedIn("NotLoggedIn");
+            sendEmailForApproval();
+            return "signUpConfirmation.xhtml"; // navigate to "signUpConfirmation.xhtml"
+        }
+        else
+        {
+            theModel.setIsLoggedIn("NotLoggedIn");
+            return "error.xhml"; 
+        }
+    }
 
     public void sendEmailForApproval(){
         // Recipient's email ID needs to be mentioned.
-        String to = "msabu@ilstu.edu";
+        String to = "msabu@ilstu.edu"; //have to query db to get the email of admin
         // Sender's email ID needs to be mentioned
         String from = "msabu@ilstu.edu";
+        String accountJustification = theModel.getAccountJustification();
         // Assuming you are sending email from this host
         String host = "smtp.ilstu.edu";
         // Get system properties
@@ -254,9 +243,10 @@ public class SignUpController {
             // Set Subject: header field
             message.setSubject("ISU Thesis Tracker: New Account Request");
             String messageBody = "Hi,<br><br>A new account for the ISU thesis tracker system has been requested"
-                    + " by a student. Please login to the "
-                    + "Thesis Tracker System and review this request and do the needful."
-                    + "<br><br>Best Regards,<br>Tech Support Team<br>";
+                    + " by a student. Please see below the reason for account provided by the student.<br><br>"
+                    + accountJustification + "<br><br>" 
+                    + "Please login to the Thesis Tracker System and review this request and do the needful."
+                    + "<br><br>Best Regards,<br>Thesis Tracker Team<br>";
             // Send the actual HTML message, as big as you like
             message.setContent(messageBody,
                     "text/html");
@@ -264,84 +254,7 @@ public class SignUpController {
             Transport.send(message);
             System.out.println("Sent message successfully....");
         } catch (MessagingException mex) {
-            mex.printStackTrace();
+             throw new RuntimeException(mex);
         }
     }
-    
-    public String authenticate(){
-        
-        String validationMessage = null;
-        
-        String first = theModel.getFirstName();
-        String last = theModel.getLastName();
-        String uid = theModel.getUserName();
-        String pwd = theModel.getPassword();
-//        String confPwd = theModel.getConfirmPassword();
-        String email = theModel.getEmail();
-//        String secQn = theModel.getSecurityQuestion();
-//        String secAns = theModel.getSecurityAnswer();
-//        String justification = theModel.getAccountJustification();
-        String reason = theModel.getReasonForAccount();
-        
-//        UserDAO aSignUpDAO = new UserDAOImpl();
-//        int uidCount = aSignUpDAO.checkUserName(uid);
-         
-        if(first.length()==0){
-           signUpValidaton = "The first name field cannot be left blank. Please enter your first name"; 
-        }
-        else if(first.length()<2 || first.length()>25){
-            signUpValidaton = "Your first name has to be between 2 and 25 letters long";
-        }
-        else if(last.length()==0){
-           signUpValidaton = "The last name field cannot be left blank. Please enter your last name"; 
-        }
-        else if(last.length()<2 || last.length()>25){
-            signUpValidaton = "Your last name has to be between 2 and 25 letters long";
-        }
-        else if(uid.length()==0){
-           signUpValidaton = "Your ULID is required to create an account. Please enter your ULID"; 
-        }
-        else if(uid.length()<2 || uid.length()>7){
-           signUpValidaton = "Invalid ULID. Please enter your ULID."; 
-        }
-//        else if(uidCount >=1){
-//               signUpValidaton = "The ULID you provided is already registered in this system. Try recovering your password."; 
-//        }
-        else if(pwd.length()==0){
-           signUpValidaton = "A password is required to create an account. Please enter a password for your account"; 
-        }
-        else if(pwd.length()<8){
-           signUpValidaton = "The password should have at least 8 characters"; 
-        }
-////        else if(confPwd.length()==0){
-////           signUpValidaton = "Please confirm the password you have entered"; 
-////        }
-////        else if(!pwd.equals(confPwd)){
-////            signUpValidaton = "The password and the confirmation password doesn't match";
-////        }
-        else if(email.length()==0){
-           signUpValidaton = "A valid email address is required to create an account. Please enter your email id"; 
-        }
-//        else if(secQn.length()==0){
-//           signUpValidaton = "Please select a security question for account recovery processes."; 
-//        }
-//        else if(secAns.length()==0){
-//           signUpValidaton = "Please give an answer for the security question you chose."; 
-//        }
-//        else if(justification.length()==0){
-//            signUpValidaton = "Please provide a justificationas to why you are requesting this account.";
-//        }
-        else if(reason.length()==0){
-            signUpValidaton = "Please select a type of account your wish to sign up for.";
-        }
-        else{
-            signUpValidaton = "";
-            validationMessage = "signUpPage2.xhtml";
-//            validationMessage = createAccount();
-//            sendEmailForApproval();
-        }
-        return validationMessage;
-    }
-    
-
 }
