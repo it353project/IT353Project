@@ -16,7 +16,7 @@
                     <div id="login" style ="width:400px; height:410px; margin: 0 auto; margin-top: 50px; margin-bottom: 50px; border: 1px solid #000; background-color: #EAEBD8">
                           
                     <h:form  enctype="multipart/form-data">
-                        <br/><br/>
+                        <!--<br/><br/>
                         Course Number    
                         <p:inputText id="courseNoID"  value=""/><br/><br/>
                         
@@ -34,7 +34,7 @@
                         
                         Abstract
                         <p:inputTextarea rows="6" cols="22" id="accountReasonID" value="#{signUpController.theModel.accountJustification}"/>
-  <br/><br/>
+  <br/><br/>-->
                         <div id="uploadthesisbutton">
                              <h:inputFile value="#{uploadController.file1}" /> &nbsp;&nbsp;&nbsp;
                             <h:commandButton value="Upload Document" action="#{uploadController.upload()}"/>
@@ -44,7 +44,7 @@
                                 </em></div>
                         </div>
                         
-                        <h:commandButton value="Submit Thesis" action="#{uploadController.authenticateSubmission()}"/>
+                        <h:commandButton value="Submit Thesis" action="#{uploadController.upload()}"/>
                       </h:form>
                 </div></center>
         </ui:define>

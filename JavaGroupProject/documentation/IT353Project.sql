@@ -1,0 +1,74 @@
+create table "IT353".ABSTRACT
+(
+	ABSTRACTID INTEGER not null primary key,
+	ABSTRACT CLOB not null
+)
+
+create table "IT353".ACCOUNT
+(
+	ACCOUNTID INTEGER not null primary key,
+	FIRSTNAME VARCHAR(32) not null,
+	LASTNAME VARCHAR(32) not null,
+	PASSWORD VARCHAR(32) not null,
+	ACCOUNTTYPE VARCHAR(16) not null,
+	ACCOUNTSTATUS VARCHAR(16) default 'PENDING' not null,
+	EMAIL VARCHAR(255),
+	SECQUESTION VARCHAR(255),
+	SECANS VARCHAR(255)
+)
+
+create table "IT353".APPOINTMENT
+(
+	APPOINTMENTID INTEGER not null primary key,
+	ACCOUNTID INTEGER not null,
+	COMMITTEEID INTEGER not null
+)
+
+create table "IT353".ATTACHMENT
+(
+	ATTACHMENTID INTEGER not null primary key,
+	ATTACHMENT BLOB(65535) not null
+)
+
+create table "IT353".COMMITTEE
+(
+	COMMITTEEID INTEGER not null primary key,
+	THESISID INTEGER not null,
+	COMMITTEEHEAD INTEGER not null
+)
+
+create table "IT353".KEYASSIGN
+(
+	KEYASSIGNID INTEGER not null primary key,
+	KEYWORDID INTEGER not null,
+	THESISID INTEGER not null
+)
+
+create table "IT353".KEYWORD
+(
+	KEYWORDID INTEGER not null primary key,
+	KEYWORD VARCHAR(255) not null
+)
+
+create table "IT353".REQUEST
+(
+	REQUESTID INTEGER not null primary key,
+	ACCOUNTID INTEGER not null,
+	REQUESTREASON VARCHAR(255)
+)
+
+create table "IT353".THESIS
+(
+	THESISID INTEGER not null primary key,
+	ACCOUNTID INTEGER not null,
+	COMMITTEEID INTEGER not null,
+	KEYASSIGNID INTEGER not null,
+	ABSTRACTID INTEGER not null,
+	ATTACHMENTID INTEGER not null,
+	SCREENCASTLINK VARCHAR(255),
+	LIVELINK VARCHAR(255),
+	UPLOADDATE DATE not null,
+	NOTIMESVIEWED INTEGER default 0 not null,
+	NOTIMESDOWN INTEGER default 0 not null,
+	COURSENO VARCHAR(16) not null
+)
