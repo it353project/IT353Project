@@ -38,27 +38,22 @@ public class UserDAOImpl implements UserDAO {
 
             String insertString;
             Statement stmt = DBConn.createStatement();
-            insertString = "INSERT INTO IT353.Users VALUES ('"
+            insertString = "INSERT INTO IT353.ACCOUNT VALUES (2, '"
                     + aSignUp.getFirstName()
                     + "','" + aSignUp.getLastName()
-                    + "','" + aSignUp.getUserName()
                     + "','" + aSignUp.getPassword()
-                    + "','" + aSignUp.getEmail()
+                    + "','" + aSignUp.getAccountType()
+                    + "', default, '"
+                    + aSignUp.getEmail()
                     + "','" + aSignUp.getSecurityQuestion()
                     + "','" + aSignUp.getSecurityAnswer()
+                    + "','" + aSignUp.getUserName()
                     + "')";
 
             rowCount = stmt.executeUpdate(insertString);
             System.out.println("insert string =" + insertString);
+            System.out.println(rowCount + " row(s) inserted");
 
-            String insertLoginString = "INSERT INTO IT353.Login VALUES ('"
-                    + aSignUp.getUserName()
-                    + "','" + aSignUp.getPassword()
-                    + "')";
-
-            rowCountLogin = stmt.executeUpdate(insertLoginString);
-            System.out.println("LoginInfo insert string =" + insertLoginString);
-            System.out.println(rowCountLogin + " row(s) inserted");
             DBConn.close();
 
         } catch (SQLException e) {
@@ -69,17 +64,16 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public int checkUserName(String userName) {
-        String query = "SELECT COUNT(*) AS USERCOUNT FROM IT353.Users ";
-        query += "WHERE userid  = '" + userName + "'";
+        String query = "SELECT COUNT(*) AS USERCOUNT FROM IT353.ACCOUNT ";
+        query += "WHERE ULID  = '" + userName + "'";
 
         int existingUserCount = 0;
-        Connection DBConn = null;
         try {
             DBHelper.loadDriver("org.apache.derby.jdbc.ClientDriver");
             // if doing the above in Oracle: DBHelper.loadDriver("oracle.jdbc.driver.OracleDriver");
             String myDB = "jdbc:derby://localhost:1527/IT353";
             // if doing the above in Oracle:  String myDB = "jdbc:oracle:thin:@oracle.itk.ilstu.edu:1521:ora478";
-            DBConn = DBHelper.connect2DB(myDB, "itkstu", "student");
+            Connection DBConn = DBHelper.connect2DB(myDB, "itkstu", "student");
             // With the connection made, create a statement to talk to the DB server.
             // Create a SQL statement to query, retrieve the rows one by one (by going to the
             // columns), and formulate the result string to send back to the client.
@@ -89,15 +83,13 @@ public class UserDAOImpl implements UserDAO {
                 existingUserCount = Integer.parseInt(rs.getString("USERCOUNT"));
             }
 
-        } catch (Exception e) {
-            System.err.println("ERROR: Problems with SQL select");
-            e.printStackTrace();
-        }
-        try {
             DBConn.close();
+
         } catch (SQLException e) {
+            System.err.println("ERROR: Problems with SQL select");
             System.err.println(e.getMessage());
         }
+
         return existingUserCount;
     }
 

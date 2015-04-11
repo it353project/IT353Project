@@ -20,7 +20,7 @@ public class UserBean {
     private String email;
     private String securityQuestion;
     private String securityAnswer;
-    private String reasonForAccount;
+    private String accountType;
     private String accountJustification;
     private String isLoggedIn;
     
@@ -29,7 +29,8 @@ public class UserBean {
         
     }
 
-    public UserBean(String firstName, String lastName, String userName, String password, String email, String securityQuestion, String securityAnswer, String reasonForAccount){
+    public UserBean(String firstName, String lastName, String userName, String password, 
+            String email, String securityQuestion, String securityAnswer, String accountType){
         this.firstName = firstName;
         this.lastName = lastName;
         this.userName = userName;
@@ -37,8 +38,8 @@ public class UserBean {
         this.email = email;
         this.securityQuestion = securityQuestion;
         this.securityAnswer = securityAnswer;
-        this.reasonForAccount = reasonForAccount;
-    }
+        this.accountType = accountType;
+     }
 
     /**
      * @return the firstName
@@ -177,20 +178,20 @@ public class UserBean {
     }
     
     /**
-     * @return the reasonForAccount
+     * @return the accountType
      */
-    public String getReasonForAccount() {
-        return reasonForAccount;
+    public String getAccountType() {
+        return accountType;
     }
 
     /**
-     * @param reasonForAccount the reasonForAccount to set
+     * @param accountType the accountType to set
      */
-    public void setReasonForAccount(String reasonForAccount) {
-        if(reasonForAccount.contains("'")){
-            reasonForAccount = reasonForAccount.replace("'", "''");
+    public void setAccountType(String accountType) {
+        if(accountType.contains("'")){
+            accountType = accountType.replace("'", "''");
         }
-        this.reasonForAccount = reasonForAccount;
+        this.accountType = accountType;
     }
 
     /**

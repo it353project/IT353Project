@@ -31,7 +31,7 @@
                             <p:inputText id="emailID" placeholder="ULID@ilstu.edu" value="#{signUpController.theModel.email}">
                             </p:inputText> <br/><br/>
 
-                            <p:selectOneMenu id="accountTypeID"  style="width: 195px" value="#{signUpController.theModel.reasonForAccount}">
+                            <p:selectOneMenu id="accountTypeID"  style="width: 195px" value="#{signUpController.theModel.accountType}">
                                 <f:selectItem itemLabel="Account Type" itemValue=""/>
                                 <f:selectItem itemLabel="Student Account" itemValue="student"/>
                                 <f:selectItem itemLabel="Admin Account" itemValue="admin"/>
@@ -45,7 +45,7 @@
                                 </font>
                             </div><br/>
 
-                            <h:commandButton id="NextID" value="Next" action="#{signUpController.authenticatePage1()}"/> <br/><br/>
+                            <h:commandButton id="NextID" value="Next" action="#{signUpController.authenticatePage1()}" style="width:200px;height:25px"/> <br/><br/>
 
                         </h:form></center>
                 </div>
@@ -53,4 +53,3 @@
         </ui:composition>
     </h:body>
 </html>
-

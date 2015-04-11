@@ -21,6 +21,7 @@
                                 <f:selectItem itemLabel="Which city where you born?" itemValue="birthCity"/> <!--add more security questions -->
                                 <f:selectItem itemLabel="What is the name of your first employer?" itemValue="employerName"/>
                             </p:selectOneMenu> <br/> <br/>
+                            
                             <p:inputText placeholder="Answer" id="securityAnswerID" value="#{signUpController.theModel.securityAnswer}"/> <br/> <br/>
                             <div align="left">
                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -34,7 +35,7 @@
                                     </em>
                                 </font>
                             </div><br/>
-                            <h:commandButton id="SubmitID" value="Create Account" action="#{signUpController.authenticatePage2()}"/> <br/> <br/>
+                            <h:commandButton id="SubmitID" value="Create Account" action="#{signUpController.authenticatePage2()}" style="width:200px;height:25px"/> <br/> <br/>
 
                         </h:form></center>
                 </div>
