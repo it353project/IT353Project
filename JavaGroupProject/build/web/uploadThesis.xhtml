@@ -6,50 +6,60 @@
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
     <h:head>
-        <title>Login Page</title>
+        <title>Upload My Work</title>
     </h:head>
 
     <h:body>
         <ui:composition template="masterTemplate.xhtml">
             <ui:define name="content">
+                <center>
+                    <h:link value="Upload" outcome="uploadThesis.xhtml"/> | 
+                    <h:link value="Search" outcome="uploadThesis.xhtml"/> |
+                    <h:link value="Account" outcome="studentLandingPage.xhtml"/>
+                    <hr/>
+                </center>
                 <center><h2>Upload Thesis</h2> 
-                    <div id="login" style ="width:400px; height:410px; margin: 0 auto; margin-top: 50px; margin-bottom: 50px; border: 1px solid #000; background-color: #EAEBD8">
-                          
-                    <h:form  enctype="multipart/form-data">
-                        <!--<br/><br/>
-                        Course Number    
-                        <p:inputText id="courseNoID"  value=""/><br/><br/>
-                        
-                        Semester Completed
-                        <p:inputText id="semsterID" value=""/><br/><br/>
-                        
-                        Keywords
-                        <p:inputText id="keyWordsID"  value=""/><br/><br/>
-                        
-                        Live Link
-                        <p:inputText id="livelinkID"  value=""/><br/><br/>
-                        
-                        Screencast
-                        <p:inputText id="screencastID"  value=""/><br/><br/>
-                        
-                        Abstract
-                        <p:inputTextarea rows="6" cols="22" id="accountReasonID" value="#{signUpController.theModel.accountJustification}"/>
-  <br/><br/>-->
-                        <div id="uploadthesisbutton">
-                             <h:inputFile value="#{uploadController.file1}" /> &nbsp;&nbsp;&nbsp;
-                            <h:commandButton value="Upload Document" action="#{uploadController.upload()}"/>
-                            <div><em><br/>
-                                    <h:outputText id="resultStr" value="#{uploadController.uploadResult}" /><br/>
-                                    <h:commandLink value="#{uploadController.uploadFileName}" action="#{uploadController.uploadLink}"/>
-                                </em></div>
-                        </div>
-                        
-                        <h:commandButton value="Submit Thesis" action="#{uploadController.upload()}"/>
-                      </h:form>
-                </div></center>
-        </ui:define>
-    </ui:composition>
+                    <div id="login" style ="width:650px; height:420px; margin: 0 auto; margin-top: 25px; margin-bottom: 50px; border: 1px solid #000; background-color: #EAEBD8">
 
-</h:body>
+                        <h:form  enctype="multipart/form-data">
+                            <br/><br/>
+                            
+                            Course Number    
+                            <p:inputText id="courseNoID"  value=""/><br/><br/>
+
+                            Semester Completed
+                            <p:inputText id="semsterID" value=""/><br/><br/>
+                            
+                            Topic
+                            <p:inputText id="topicID" value=""/><br/><br/>
+
+                            Keywords
+                            <p:inputText id="keyWordsID"  value=""/><br/><br/>
+
+                            Live Link
+                            <p:inputText id="livelinkID"  value=""/><br/><br/>
+
+                            Screencast
+                            <p:inputText id="screencastID"  value=""/><br/><br/>
+
+                            Abstract
+                            <p:inputTextarea rows="6" cols="22" id="accountReasonID" value="#{signUpController.theModel.accountJustification}"/>
+                            <br/><br/>
+                            <div id="uploadthesisbutton">
+                                <h:inputFile value="#{uploadController.file1}" /> &nbsp;&nbsp;&nbsp;
+                                <h:commandButton value="Upload Document" action="#{uploadController.upload()}"/>
+                                <div><em><br/>
+                                        <h:outputText id="resultStr" value="#{uploadController.uploadResult}" /><br/>
+                                        <h:commandLink value="#{uploadController.uploadFileName}" action="#{uploadController.uploadLink}"/>
+                                    </em></div>
+                            </div>
+
+                            <h:commandButton value="Submit" action="#{uploadController.upload()}"/>
+                        </h:form>
+                    </div></center>
+            </ui:define>
+        </ui:composition>
+
+    </h:body>
 
 </html>

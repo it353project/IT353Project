@@ -11,61 +11,58 @@ package model;
  * @author it3530229
  */
 public class ThesisBean {
-    private String thesisID;
-    private String accountID;
+    
+    private String topic;
     private String courseID;
-    private String committeeID;
-    private String keyAssignID;
-    private String abstractID;
-    private String attachmentID;
-    private String screencastLink;
+    private String semesterName;
+    private String keywords;
     private String liveLink;
+    private String screencastLink;
+    private String committeeChair;
+    private String committeMember1;
+    private String committeMember2;
+    private String committeMember3;
+    private String projectAbstract;
+    private String deliverableLink;
     private String uploadDate;
     private int numberOfViews;
     private int downloadsCount;
+    private String submissionStatus;    
 
-    public ThesisBean(String thesisID, String accountID, String courseID, String committeeID, String keyAssignID, String abstractID,
-            String attachmentID, String screencastLink, String liveLink, String uploadDate, int numberOfViews,
-            int downloadsCount){
-        this.thesisID = thesisID;
-        this.accountID = accountID;
+    
+    public ThesisBean(){
+        
+    }
+
+    public ThesisBean(String topic, String courseID, String semesterName, String keywords, String liveLink, String screencastLink,
+            String committeeChair, String committeMember1, String committeMember2, String committeMember3, String projectAbstract,
+            String deliverableLink){
+        this.topic = topic;
         this.courseID = courseID;
-        this.committeeID = committeeID;
-        this.keyAssignID = keyAssignID;
-        this.abstractID = abstractID;
-        this.attachmentID = attachmentID;
-        this.screencastLink = screencastLink;
+        this.semesterName = semesterName;
+        this.keywords = keywords;
         this.liveLink = liveLink;
-        this.uploadDate = uploadDate;
-        this.numberOfViews = numberOfViews;
-        this.downloadsCount = downloadsCount;
-    }
-    /**
-     * @return the thesisID
-     */
-    public String getThesisID() {
-        return thesisID;
+        this.screencastLink = screencastLink;
+        this.committeeChair = committeeChair;
+        this.committeMember1 = committeMember1;
+        this.committeMember2 = committeMember2;
+        this.committeMember3 = committeMember3;
+        this.projectAbstract = projectAbstract;
+        this.deliverableLink = deliverableLink;
     }
 
     /**
-     * @param thesisID the thesisID to set
+     * @return the topic
      */
-    public void setThesisID(String thesisID) {
-        this.thesisID = thesisID;
+    public String getTopic() {
+        return topic;
     }
 
     /**
-     * @return the accountID
+     * @param topic the topic to set
      */
-    public String getAccountID() {
-        return accountID;
-    }
-
-    /**
-     * @param accountID the accountID to set
-     */
-    public void setAccountID(String accountID) {
-        this.accountID = accountID;
+    public void setTopic(String topic) {
+        this.topic = topic;
     }
 
     /**
@@ -83,59 +80,45 @@ public class ThesisBean {
     }
 
     /**
-     * @return the committeeID
+     * @return the semesterName
      */
-    public String getCommitteeID() {
-        return committeeID;
+    public String getSemesterName() {
+        return semesterName;
     }
 
     /**
-     * @param committeeID the committeeID to set
+     * @param semesterName the semesterName to set
      */
-    public void setCommitteeID(String committeeID) {
-        this.committeeID = committeeID;
+    public void setSemesterName(String semesterName) {
+        this.semesterName = semesterName;
     }
 
     /**
-     * @return the keyAssignID
+     * @return the keywords
      */
-    public String getKeyAssignID() {
-        return keyAssignID;
+    public String getKeywords() {
+        return keywords;
     }
 
     /**
-     * @param keyAssignID the keyAssignID to set
+     * @param keywords the keywords to set
      */
-    public void setKeyAssignID(String keyAssignID) {
-        this.keyAssignID = keyAssignID;
+    public void setKeywords(String keywords) {
+        this.keywords = keywords;
     }
 
     /**
-     * @return the abstractID
+     * @return the liveLink
      */
-    public String getAbstractID() {
-        return abstractID;
+    public String getLiveLink() {
+        return liveLink;
     }
 
     /**
-     * @param abstractID the abstractID to set
+     * @param liveLink the liveLink to set
      */
-    public void setAbstractID(String abstractID) {
-        this.abstractID = abstractID;
-    }
-
-    /**
-     * @return the attachmentID
-     */
-    public String getAttachmentID() {
-        return attachmentID;
-    }
-
-    /**
-     * @param attachmentID the attachmentID to set
-     */
-    public void setAttachmentID(String attachmentID) {
-        this.attachmentID = attachmentID;
+    public void setLiveLink(String liveLink) {
+        this.liveLink = liveLink;
     }
 
     /**
@@ -153,17 +136,87 @@ public class ThesisBean {
     }
 
     /**
-     * @return the liveLink
+     * @return the committeeChair
      */
-    public String getLiveLink() {
-        return liveLink;
+    public String getCommitteeChair() {
+        return committeeChair;
     }
 
     /**
-     * @param liveLink the liveLink to set
+     * @param committeeChair the committeeChair to set
      */
-    public void setLiveLink(String liveLink) {
-        this.liveLink = liveLink;
+    public void setCommitteeChair(String committeeChair) {
+        this.committeeChair = committeeChair;
+    }
+
+    /**
+     * @return the committeMember1
+     */
+    public String getCommitteMember1() {
+        return committeMember1;
+    }
+
+    /**
+     * @param committeMember1 the committeMember1 to set
+     */
+    public void setCommitteMember1(String committeMember1) {
+        this.committeMember1 = committeMember1;
+    }
+
+    /**
+     * @return the committeMember2
+     */
+    public String getCommitteMember2() {
+        return committeMember2;
+    }
+
+    /**
+     * @param committeMember2 the committeMember2 to set
+     */
+    public void setCommitteMember2(String committeMember2) {
+        this.committeMember2 = committeMember2;
+    }
+
+    /**
+     * @return the committeMember3
+     */
+    public String getCommitteMember3() {
+        return committeMember3;
+    }
+
+    /**
+     * @param committeMember3 the committeMember3 to set
+     */
+    public void setCommitteMember3(String committeMember3) {
+        this.committeMember3 = committeMember3;
+    }
+
+    /**
+     * @return the projectAbstract
+     */
+    public String getProjectAbstract() {
+        return projectAbstract;
+    }
+
+    /**
+     * @param projectAbstract the projectAbstract to set
+     */
+    public void setProjectAbstract(String projectAbstract) {
+        this.projectAbstract = projectAbstract;
+    }
+
+    /**
+     * @return the deliverableLink
+     */
+    public String getDeliverableLink() {
+        return deliverableLink;
+    }
+
+    /**
+     * @param deliverableLink the deliverableLink to set
+     */
+    public void setDeliverableLink(String deliverableLink) {
+        this.deliverableLink = deliverableLink;
     }
 
     /**
@@ -207,6 +260,24 @@ public class ThesisBean {
     public void setDownloadsCount(int downloadsCount) {
         this.downloadsCount = downloadsCount;
     }
+
+    /**
+     * @return the submissionStatus
+     */
+    public String getSubmissionStatus() {
+        return submissionStatus;
+    }
+
+    /**
+     * @param submissionStatus the submissionStatus to set
+     */
+    public void setSubmissionStatus(String submissionStatus) {
+        this.submissionStatus = submissionStatus;
+    }
+    
+    
+    
+
     
     
 }

@@ -99,6 +99,18 @@ public class UploadController {
     }
     
     public String authenticateSubmission(){
+        String uploadValidationMessage =null;
+        String courseNo = theModel.getCourseID();
+        String semester = theModel.getSemesterName();
+        String keywords = theModel.getKeywords();
+        String liveLink = theModel.getLiveLink();
+        String screenCastLink = theModel.getScreencastLink();
+        String committeeChair = theModel.getCommitteeChair();
+        String committeeMember1 = theModel.getCommitteMember1();
+        String committeMember2 = theModel.getCommitteMember2();
+        String committeeMember3 = theModel.getCommitteMember3();
+        String projectAbstract = theModel.getProjectAbstract();
+        String deliverableLink = theModel.getDeliverableLink();
         
         return null;
     }
