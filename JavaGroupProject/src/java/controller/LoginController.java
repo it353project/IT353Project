@@ -146,7 +146,7 @@ public class LoginController {
 
     public String recoverPassword() {
         String ulid = theModel.getUserName();
-        String recoveredPassword;
+        
         UserDAO aRecovery = new UserDAOImpl();
         int rowCount = aRecovery.checkUserName(ulid);
         if (rowCount <= 0) {
@@ -155,7 +155,7 @@ public class LoginController {
         } else {
             loginValidaton = "A password recovery email has been sent to your ISU email address. "
                     + "Please follow the instructions provided";
-            recoveredPassword = aRecovery.retrieveAccount(ulid);
+            String recoveredPassword = aRecovery.retrievePassword(ulid);
             sendPasswordRecoveryEmail(ulid, recoveredPassword);
             return "login.xhtml";
         }
@@ -190,7 +190,7 @@ public class LoginController {
             String messageBody = "Hi,<br><br>We have received your password recovery request. "
                     + "This email contains the information that you need to log back into your account<br><br>"
                     + "User Name: " + uid + "<br>"
-                    + "Password: " + pwd + "<br>"
+                    + "Password: " + pwd + "<br><br>"
                     + "Please go back to the login page and try to login with the above credentials. <br>"
                     + "If you are still unable to access your account, please call 309-309-3099 or email us at xxxx@something.com <br>"
                     + "<br><br>Best Regards,<br>Tech Support Team<br>";

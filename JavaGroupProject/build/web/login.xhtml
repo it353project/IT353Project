@@ -11,11 +11,11 @@
     <h:body>
         <ui:composition template="masterTemplate.xhtml">
             <ui:define name="content">
-                                
-                <div id="login" style ="width:400px; height:200px; margin: 0 auto; margin-top: 50px; margin-bottom: 50px; border: 1px solid #000; background-color: #EAEBD8">
+                  <center><br/><h2>Log In to Your Account</h2>              
+                <div id="login" style ="width:400px; height:250px; margin: 0 auto; margin-top: 50px; margin-bottom: 50px; border: 1px solid #000; background-color: #EAEBD8">
                                        
-                    <center><h3>Log In to Your Account</h3>
-                    <br/>
+                    
+                    <br/><br/><br/>
 
                     <h:form id="logonForm"> 
 
@@ -25,16 +25,16 @@
                         <div>
                             <font color="red">
                                 <em>                           
-                                        <h:outputText id="resultStr" value="#{loginController.loginValidaton}" />
+                                    <h:outputText id="resultStr" value="#{loginController.loginValidaton}" /><br/>
                                 </em>
                             </font>
                         </div>
-
-                        <h:commandButton value="Log In" id="submitID" style="width: 200px" action="#{loginController.authenticateUser()}"/> <br/> <br/>
+                        
+                        <p:commandButton value="Log In" id="submitID" style="width: 200px" action="#{loginController.authenticateUser()}"/> <br/> <br/>
                         <h:link value="Forgot Your Password?" outcome="lostPassword.xhtml" /> 
                         
-                    </h:form> </center>
-                </div>
+                    </h:form> 
+                </div></center>
             </ui:define>
         </ui:composition>
     </h:body>

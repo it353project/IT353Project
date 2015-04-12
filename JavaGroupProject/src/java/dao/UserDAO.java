@@ -21,7 +21,8 @@ public interface UserDAO {
     public int findPendingAccount(UserBean aLogin);
     public String findUserAccountType(UserBean aLogin);
     
-    public String retrieveAccount(String userName);
+    public String retrievePassword(String userName);
+    
     public ArrayList findByUserName(String aName);
     public int updateProfile(UserBean anUpdate);
     

@@ -19,7 +19,9 @@ import model.UserBean;
  * @author it3530219
  */
 public class UserDAOImpl implements UserDAO {
+
     //used in signUp Controller, for adding new account details to db
+
     @Override
     public int createAccount(UserBean aSignUp) {
 
@@ -64,6 +66,7 @@ public class UserDAOImpl implements UserDAO {
     }
 
     //used in SignUpController for checking if the user name is already registered in the system.
+    //also used in loginController to check if the username is already in the system for account recovery
     @Override
     public int checkUserName(String userName) {
         String query = "SELECT COUNT(*) AS USERCOUNT FROM IT353.ACCOUNT ";
@@ -94,7 +97,7 @@ public class UserDAOImpl implements UserDAO {
 
         return existingUserCount;
     }
-    
+
     //used in LoginController for validating the user while logging in
     @Override
     public int findAccount(UserBean aLogin) {
@@ -119,7 +122,7 @@ public class UserDAOImpl implements UserDAO {
             while (rs.next()) {
                 accountsCount = Integer.parseInt(rs.getString("USERCOUNT"));
             }
-            System.out.println("approved account count="+ accountsCount);
+            System.out.println("approved account count=" + accountsCount);
             DBConn.close();
         } catch (SQLException e) {
             System.err.println("ERROR: Problems with SQL select in findAccount()");
@@ -127,7 +130,7 @@ public class UserDAOImpl implements UserDAO {
         }
         return accountsCount;
     }
-    
+
     //used in LoginController for validating the user while logging in
     @Override
     public int findPendingAccount(UserBean aLogin) {
@@ -160,7 +163,7 @@ public class UserDAOImpl implements UserDAO {
         }
         return pendingAccountsCount;
     }
-    
+
     //used in LoginController for finding the role of the user while logging in. 
     @Override
     public String findUserAccountType(UserBean aLogin) {
@@ -185,7 +188,7 @@ public class UserDAOImpl implements UserDAO {
             while (rs.next()) {
                 accountType = rs.getString("ACCOUNTTYPE");
             }
-            System.out.println("Account type= "+accountType);
+            System.out.println("Account type= " + accountType);
             DBConn.close();
         } catch (SQLException e) {
             System.err.println("ERROR: Problems with SQL select in findAccount()");
@@ -194,41 +197,35 @@ public class UserDAOImpl implements UserDAO {
         return accountType;
     }
 
+    //used in loginController to retrieve the lost password
     @Override//not yet used
-    public String retrieveAccount(String userName) {
-        String query = "SELECT PASSWORD AS PWD FROM IT353.Login ";
-        query += "WHERE userid  = '" + userName + "'";
+    public String retrievePassword(String userName) {
+        String query = "SELECT PASSWORD FROM IT353.ACCOUNT ";
+        query += "WHERE ulid  = '" + userName + "'";
 
         String password = null;
-        Connection DBConn = null;
         try {
             DBHelper.loadDriver("org.apache.derby.jdbc.ClientDriver");
             // if doing the above in Oracle: DBHelper.loadDriver("oracle.jdbc.driver.OracleDriver");
             String myDB = "jdbc:derby://localhost:1527/IT353";
             // if doing the above in Oracle:  String myDB = "jdbc:oracle:thin:@oracle.itk.ilstu.edu:1521:ora478";
-            DBConn = DBHelper.connect2DB(myDB, "itkstu", "student");
+            Connection DBConn = DBHelper.connect2DB(myDB, "itkstu", "student");
             // With the connection made, create a statement to talk to the DB server.
             // Create a SQL statement to query, retrieve the rows one by one (by going to the
             // columns), and formulate the result string to send back to the client.
             Statement stmt = DBConn.createStatement();
             ResultSet rs = stmt.executeQuery(query);
             while (rs.next()) {
-                password = rs.getString("PWD");
+                password = rs.getString("PASSWORD");
             }
-
-        } catch (Exception e) {
-            System.err.println("ERROR: Problems with SQL select in retrieveAccount()");
-            e.printStackTrace();
-        }
-        try {
             DBConn.close();
         } catch (SQLException e) {
+            System.err.println("ERROR: Problems with SQL select in retrieveAccount()");
             System.err.println(e.getMessage());
         }
         return password;
     }
 
-    
     //for updaterpofile?
     @Override
     public ArrayList findByUserName(String uName) {
