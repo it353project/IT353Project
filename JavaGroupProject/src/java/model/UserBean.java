@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package model;
 
 /**
@@ -11,7 +10,7 @@ package model;
  * @author Minu Sabu
  */
 public class UserBean {
-    
+
     private String firstName;
     private String lastName;
     private String userName;
@@ -23,14 +22,16 @@ public class UserBean {
     private String accountType;
     private String accountJustification;
     private String isLoggedIn;
-    
-    /** Creates a new instance of SignUpBean */
-    public UserBean(){
-        
+
+    /**
+     * Creates a new instance of SignUpBean
+     */
+    public UserBean() {
+
     }
 
-    public UserBean(String firstName, String lastName, String userName, String password, 
-            String email, String securityQuestion, String securityAnswer, String accountType){
+    public UserBean(String firstName, String lastName, String userName, String password,
+            String email, String securityQuestion, String securityAnswer, String accountType) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.userName = userName;
@@ -39,7 +40,7 @@ public class UserBean {
         this.securityQuestion = securityQuestion;
         this.securityAnswer = securityAnswer;
         this.accountType = accountType;
-     }
+    }
 
     /**
      * @return the firstName
@@ -52,7 +53,7 @@ public class UserBean {
      * @param firstName the firstName to set
      */
     public void setFirstName(String firstName) {
-        if(firstName.contains("'")){
+        if (firstName.contains("'")) {
             firstName = firstName.replace("'", "''");
         }
         this.firstName = firstName;
@@ -69,7 +70,7 @@ public class UserBean {
      * @param lastName the lastName to set
      */
     public void setLastName(String lastName) {
-        if(lastName.contains("'")){
+        if (lastName.contains("'")) {
             lastName = lastName.replace("'", "''");
         }
         this.lastName = lastName;
@@ -86,7 +87,7 @@ public class UserBean {
      * @param userName the userName to set
      */
     public void setUserName(String userName) {
-        if(userName.contains("'")){
+        if (userName.contains("'")) {
             userName = userName.replace("'", "''");
         }
         this.userName = userName;
@@ -103,7 +104,7 @@ public class UserBean {
      * @param password the password to set
      */
     public void setPassword(String password) {
-        if(password.contains("'")){
+        if (password.contains("'")) {
             password = password.replace("'", "''");
         }
         this.password = password;
@@ -120,12 +121,12 @@ public class UserBean {
      * @param confirmPassword the confirmPassword to set
      */
     public void setConfirmPassword(String confirmPassword) {
-        if(confirmPassword.contains("'")){
+        if (confirmPassword.contains("'")) {
             confirmPassword = confirmPassword.replace("'", "''");
         }
         this.confirmPassword = confirmPassword;
     }
-    
+
     /**
      * @return the email
      */
@@ -137,7 +138,7 @@ public class UserBean {
      * @param email the email to set
      */
     public void setEmail(String email) {
-        if(email.contains("'")){
+        if (email.contains("'")) {
             email = email.replace("'", "''");
         }
         this.email = email;
@@ -154,7 +155,7 @@ public class UserBean {
      * @param securityQuestion the securityQuestion to set
      */
     public void setSecurityQuestion(String securityQuestion) {
-        if(securityQuestion.contains("'")){
+        if (securityQuestion.contains("'")) {
             securityQuestion = securityQuestion.replace("'", "''");
         }
         this.securityQuestion = securityQuestion;
@@ -171,12 +172,12 @@ public class UserBean {
      * @param securityAnswer the securityAnswer to set
      */
     public void setSecurityAnswer(String securityAnswer) {
-        if(securityAnswer.contains("'")){
+        if (securityAnswer.contains("'")) {
             securityAnswer = securityAnswer.replace("'", "''");
         }
         this.securityAnswer = securityAnswer;
     }
-    
+
     /**
      * @return the accountType
      */
@@ -188,10 +189,27 @@ public class UserBean {
      * @param accountType the accountType to set
      */
     public void setAccountType(String accountType) {
-        if(accountType.contains("'")){
+        if (accountType.contains("'")) {
             accountType = accountType.replace("'", "''");
         }
         this.accountType = accountType;
+    }
+
+    /**
+     * @return the accountJustification
+     */
+    public String getAccountJustification() {
+        return accountJustification;
+    }
+
+    /**
+     * @param accountJustification the accountJustification to set
+     */
+    public void setAccountJustification(String accountJustification) {
+        if (accountJustification.contains("'")) {
+            accountJustification = accountJustification.replace("'", "''");
+        }
+        this.accountJustification = accountJustification;
     }
 
     /**
@@ -208,19 +226,4 @@ public class UserBean {
         this.isLoggedIn = isLoggedIn;
     }
 
-    /**
-     * @return the accountJustification
-     */
-    public String getAccountJustification() {
-        return accountJustification;
-    }
-
-    /**
-     * @param accountJustification the accountJustification to set
-     */
-    public void setAccountJustification(String accountJustification) {
-        this.accountJustification = accountJustification;
-    }
-
- 
 }

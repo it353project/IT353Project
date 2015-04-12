@@ -19,7 +19,7 @@ import model.UserBean;
  * @author it3530219
  */
 public class UserDAOImpl implements UserDAO {
-
+    //used in signUp Controller, for adding new account details to db
     @Override
     public int createAccount(UserBean aSignUp) {
 
@@ -57,11 +57,13 @@ public class UserDAOImpl implements UserDAO {
             DBConn.close();
 
         } catch (SQLException e) {
+            System.err.println("ERROR: Problems with SQL insert in createAccount()");
             System.err.println(e.getMessage());
         }
         return rowCount;
     }
 
+    //used in SignUpController for checking if the user name is already registered in the system.
     @Override
     public int checkUserName(String userName) {
         String query = "SELECT COUNT(*) AS USERCOUNT FROM IT353.ACCOUNT ";
@@ -86,11 +88,110 @@ public class UserDAOImpl implements UserDAO {
             DBConn.close();
 
         } catch (SQLException e) {
-            System.err.println("ERROR: Problems with SQL select");
+            System.err.println("ERROR: Problems with SQL select in checkUserName()");
             System.err.println(e.getMessage());
         }
 
         return existingUserCount;
+    }
+    
+    //used in LoginController for validating the user while logging in
+    @Override
+    public int findAccount(UserBean aLogin) {
+        String userName = aLogin.getUserName();
+        String password = aLogin.getPassword();
+
+        String query = "SELECT COUNT(*) AS USERCOUNT FROM IT353.ACCOUNT ";
+        query += "WHERE ulid  = '" + userName + "' AND password = '" + password + "' AND accountstatus = 'approved'";
+
+        int accountsCount = 0;
+        try {
+            DBHelper.loadDriver("org.apache.derby.jdbc.ClientDriver");
+            // if doing the above in Oracle: DBHelper.loadDriver("oracle.jdbc.driver.OracleDriver");
+            String myDB = "jdbc:derby://localhost:1527/IT353";
+            // if doing the above in Oracle:  String myDB = "jdbc:oracle:thin:@oracle.itk.ilstu.edu:1521:ora478";
+            Connection DBConn = DBHelper.connect2DB(myDB, "itkstu", "student");
+            // With the connection made, create a statement to talk to the DB server.
+            // Create a SQL statement to query, retrieve the rows one by one (by going to the
+            // columns), and formulate the result string to send back to the client.
+            Statement stmt = DBConn.createStatement();
+            ResultSet rs = stmt.executeQuery(query);
+            while (rs.next()) {
+                accountsCount = Integer.parseInt(rs.getString("USERCOUNT"));
+            }
+            System.out.println("approved account count="+ accountsCount);
+            DBConn.close();
+        } catch (SQLException e) {
+            System.err.println("ERROR: Problems with SQL select in findAccount()");
+            System.err.println(e.getMessage());
+        }
+        return accountsCount;
+    }
+    
+    //used in LoginController for validating the user while logging in
+    @Override
+    public int findPendingAccount(UserBean aLogin) {
+        String userName = aLogin.getUserName();
+        String password = aLogin.getPassword();
+
+        String query = "SELECT COUNT(*) AS PENDINGUSERCOUNT FROM IT353.ACCOUNT ";
+        query += "WHERE ulid  = '" + userName + "' AND password = '" + password + "' AND accountstatus = 'PENDING'";
+
+        int pendingAccountsCount = 0;
+        try {
+            DBHelper.loadDriver("org.apache.derby.jdbc.ClientDriver");
+            // if doing the above in Oracle: DBHelper.loadDriver("oracle.jdbc.driver.OracleDriver");
+            String myDB = "jdbc:derby://localhost:1527/IT353";
+            // if doing the above in Oracle:  String myDB = "jdbc:oracle:thin:@oracle.itk.ilstu.edu:1521:ora478";
+            Connection DBConn = DBHelper.connect2DB(myDB, "itkstu", "student");
+            // With the connection made, create a statement to talk to the DB server.
+            // Create a SQL statement to query, retrieve the rows one by one (by going to the
+            // columns), and formulate the result string to send back to the client.
+            Statement stmt = DBConn.createStatement();
+            ResultSet rs = stmt.executeQuery(query);
+            while (rs.next()) {
+                pendingAccountsCount = Integer.parseInt(rs.getString("PENDINGUSERCOUNT"));
+            }
+            System.out.println("pending user count =" + pendingAccountsCount);
+            DBConn.close();
+        } catch (SQLException e) {
+            System.err.println("ERROR: Problems with SQL select in findAccount()");
+            System.err.println(e.getMessage());
+        }
+        return pendingAccountsCount;
+    }
+    
+    //used in LoginController for finding the role of the user while logging in. 
+    @Override
+    public String findUserAccountType(UserBean aLogin) {
+        String userName = aLogin.getUserName();
+        String password = aLogin.getPassword();
+
+        String query = "SELECT ACCOUNTTYPE FROM IT353.ACCOUNT ";
+        query += "WHERE ulid  = '" + userName + "' AND password = '" + password + "' AND accountstatus = 'approved'";
+
+        String accountType = null;
+        try {
+            DBHelper.loadDriver("org.apache.derby.jdbc.ClientDriver");
+            // if doing the above in Oracle: DBHelper.loadDriver("oracle.jdbc.driver.OracleDriver");
+            String myDB = "jdbc:derby://localhost:1527/IT353";
+            // if doing the above in Oracle:  String myDB = "jdbc:oracle:thin:@oracle.itk.ilstu.edu:1521:ora478";
+            Connection DBConn = DBHelper.connect2DB(myDB, "itkstu", "student");
+            // With the connection made, create a statement to talk to the DB server.
+            // Create a SQL statement to query, retrieve the rows one by one (by going to the
+            // columns), and formulate the result string to send back to the client.
+            Statement stmt = DBConn.createStatement();
+            ResultSet rs = stmt.executeQuery(query);
+            while (rs.next()) {
+                accountType = rs.getString("ACCOUNTTYPE");
+            }
+            System.out.println("Account type= "+accountType);
+            DBConn.close();
+        } catch (SQLException e) {
+            System.err.println("ERROR: Problems with SQL select in findAccount()");
+            System.err.println(e.getMessage());
+        }
+        return accountType;
     }
 
     @Override//not yet used
@@ -116,7 +217,7 @@ public class UserDAOImpl implements UserDAO {
             }
 
         } catch (Exception e) {
-            System.err.println("ERROR: Problems with SQL select");
+            System.err.println("ERROR: Problems with SQL select in retrieveAccount()");
             e.printStackTrace();
         }
         try {
@@ -127,44 +228,8 @@ public class UserDAOImpl implements UserDAO {
         return password;
     }
 
-    @Override
-    public int findAccount(UserBean aLogin) {
-        String userName = aLogin.getUserName();
-        String password = aLogin.getPassword();
-
-        String query = "SELECT COUNT(*) AS USERCOUNT FROM IT353.Login ";
-        query += "WHERE userid  = '" + userName + "' AND password = '" + password + "'";
-
-        int accountsCount = 0;
-        Connection DBConn = null;
-        try {
-            DBHelper.loadDriver("org.apache.derby.jdbc.ClientDriver");
-            // if doing the above in Oracle: DBHelper.loadDriver("oracle.jdbc.driver.OracleDriver");
-            String myDB = "jdbc:derby://localhost:1527/IT353";
-            // if doing the above in Oracle:  String myDB = "jdbc:oracle:thin:@oracle.itk.ilstu.edu:1521:ora478";
-            DBConn = DBHelper.connect2DB(myDB, "itkstu", "student");
-            // With the connection made, create a statement to talk to the DB server.
-            // Create a SQL statement to query, retrieve the rows one by one (by going to the
-            // columns), and formulate the result string to send back to the client.
-            Statement stmt = DBConn.createStatement();
-            ResultSet rs = stmt.executeQuery(query);
-            while (rs.next()) {
-                accountsCount = Integer.parseInt(rs.getString("USERCOUNT"));
-            }
-
-        } catch (Exception e) {
-            System.err.println("ERROR: Problems with SQL select");
-            e.printStackTrace();
-        }
-        try {
-            DBConn.close();
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
-        return accountsCount;
-
-    }
-
+    
+    //for updaterpofile?
     @Override
     public ArrayList findByUserName(String uName) {
         // if interested in matching wild cards, use: LIKE and '%" + aName + "%'";

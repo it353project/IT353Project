@@ -97,20 +97,39 @@ public class LoginController {
     }
 
     public String findAccount() {
-
         UserDAO aLoginDAO = new UserDAOImpl();
-        if (attemptCount < 3) {
+        if (attemptCount < 3) 
+        {
             int rowCount = aLoginDAO.findAccount(theModel); // Doing anything with the object after this?
-            if (rowCount >= 1) {
+            if (rowCount >= 1) //a user with approved account found
+            {
                 theModel.setIsLoggedIn("LoggedIn");
                 attemptCount = 0;
-                return "LoginGood.xhtml";
-            } else {
+                String accountType = aLoginDAO.findUserAccountType(theModel);
+                if (accountType.equals("admin")) //the user is an admin
+                {
+                    return "adminLandingPage.xhtml";
+                } else  //user is a student
+                {
+                    return "studentLandingPage.xhtml";
+                }
+
+            } else //a user may be either in pending status or gave incorrect username/pwd
+            {
                 theModel.setIsLoggedIn("NotLoggedIn");
-                attemptCount++;
-                return "LoginBad.xhtml";
+                int pendingRowCount = aLoginDAO.findPendingAccount(theModel);
+                if (pendingRowCount >= 1) //the user account in pending status
+                {
+                    loginValidaton = "Your account is not yet approved by the Admin. Please wait.";
+                } else //incorrect ulid/pwd
+                {
+                    attemptCount++;
+                    loginValidaton = "The username and/or password entered is incorrect. Please try again.";
+                }
+                return "";
             }
-        } else {
+        } else //user exceeded unsuccessful login attempts
+        {
             loginValidaton = "You have exceeded your limit of 3 unsuccessful login attempts. "
                     + "Your account has been temporarily locked.";
             return logout();
@@ -123,7 +142,6 @@ public class LoginController {
         theModel.setUserName("");
         theModel.setPassword("");
         return "login.xhtml";
-
     }
 
     public String recoverPassword() {

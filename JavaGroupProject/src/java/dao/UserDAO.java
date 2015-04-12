@@ -16,8 +16,12 @@ import model.UserBean;
 public interface UserDAO {
     public int createAccount(UserBean aSignUp);
     public int checkUserName(String userName);
-    public String retrieveAccount(String userName);
+    
     public int findAccount(UserBean aSignUp);
+    public int findPendingAccount(UserBean aLogin);
+    public String findUserAccountType(UserBean aLogin);
+    
+    public String retrieveAccount(String userName);
     public ArrayList findByUserName(String aName);
     public int updateProfile(UserBean anUpdate);
     
