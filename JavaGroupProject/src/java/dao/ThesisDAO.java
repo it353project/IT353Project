@@ -6,10 +6,15 @@
 
 package dao;
 
+import model.ThesisBean;
+import model.UserBean;
+
 /**
  *
  * @author it3530219
  */
 public interface ThesisDAO {
+    public int saveSubmission(ThesisBean aSubmissionBean, UserBean aUserBean);
+    public int findAccountIDFromName(String givenFullName) ;
     
 }

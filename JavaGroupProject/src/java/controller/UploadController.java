@@ -5,13 +5,14 @@
  */
 package controller;
 
-import java.io.FileOutputStream;
+import dao.ThesisDAO;
+import dao.ThesisDAOImpl;
 import java.io.IOException;
-import java.io.InputStream;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.servlet.http.Part;
 import model.ThesisBean;
+import model.UserBean;
 
 /**
  *
@@ -21,24 +22,26 @@ import model.ThesisBean;
 @SessionScoped
 public class UploadController {
 
-    private ThesisBean theModel;
+    private ThesisBean theThesisModel;
     private Part file1;
-    private String uploadResult;
+    private String documentUploadResult;
     private String uploadLink;
     private String uploadFileName;
+    private String formValidationMessage;
+    private UserBean theUserModel;
 
     /**
-     * @return the theModel
+     * @return the theThesisModel
      */
-    public ThesisBean getTheModel() {
-        return theModel;
+    public ThesisBean getTheThesisModel() {
+        return theThesisModel;
     }
 
     /**
-     * @param theModel the theModel to set
+     * @param theThesisModel the theThesisModel to set
      */
-    public void setTheModel(ThesisBean theModel) {
-        this.theModel = theModel;
+    public void setTheThesisModel(ThesisBean theThesisModel) {
+        this.theThesisModel = theThesisModel;
     }
     /**
      * 
@@ -57,17 +60,17 @@ public class UploadController {
     }
 
     /**
-     * @return the uploadResult
+     * @return the documentUploadResult
      */
-    public String getUploadResult() {
-        return uploadResult;
+    public String getDocumentUploadResult() {
+        return documentUploadResult;
     }
 
     /**
-     * @param uploadResult the uploadResult to set
+     * @param documentUploadResult the documentUploadResult to set
      */
-    public void setUploadResult(String uploadResult) {
-        this.uploadResult = uploadResult;
+    public void setDocumentUploadResult(String documentUploadResult) {
+        this.documentUploadResult = documentUploadResult;
     }
 
     /**
@@ -100,17 +103,62 @@ public class UploadController {
     
     public String authenticateSubmission(){
         String uploadValidationMessage =null;
-        String courseNo = theModel.getCourseID();
-        String semester = theModel.getSemesterName();
-        String keywords = theModel.getKeywords();
-        String liveLink = theModel.getLiveLink();
-        String screenCastLink = theModel.getScreencastLink();
-        String committeeChair = theModel.getCommitteeChair();
-        String committeeMember1 = theModel.getCommitteMember1();
-        String committeMember2 = theModel.getCommitteMember2();
-        String committeeMember3 = theModel.getCommitteMember3();
-        String projectAbstract = theModel.getProjectAbstract();
-        String deliverableLink = theModel.getDeliverableLink();
+        
+        String courseNo = theThesisModel.getCourseID();
+        String semester = theThesisModel.getSemesterName();
+        String keywords = theThesisModel.getKeywords();
+        String liveLink = theThesisModel.getLiveLink();
+        String screenCastLink = theThesisModel.getScreencastLink();
+        String committeeChair = theThesisModel.getCommitteeChair();
+        String committeeMember1 = theThesisModel.getCommitteMember1();
+        String committeeMember2 = theThesisModel.getCommitteMember2();
+        String committeeMember3 = theThesisModel.getCommitteMember3();
+        String projectAbstract = theThesisModel.getProjectAbstract();
+        String deliverableLink = theThesisModel.getDeliverableLink();
+        
+        if(courseNo.length()==0){
+            setFormValidationMessage("Please enter your course number"); 
+        }
+        else if(semester.length()==0){
+            setFormValidationMessage("Please enter the current semester");
+        }
+        else if(keywords.length()==0){
+            setFormValidationMessage("Please enter a few keywords separated by comma"); 
+        }
+        else if(liveLink.length()==0){
+            setFormValidationMessage("Please enter the live link for the work");
+        }
+        else if(screenCastLink.length()==0){
+            setFormValidationMessage("Please enter a the link to your screencast"); 
+        }
+        else if(committeeChair.length()==0){
+            setFormValidationMessage("Please enter the name of the assigned committe chair");
+        }
+        else if(committeeMember1.length()==0 || committeeMember2.length()==0 || committeeMember3.length()==0){
+            setFormValidationMessage("Please enter names of your committee members"); 
+        }
+        else if(projectAbstract.length()==0){
+            setFormValidationMessage("Please paste your abstract in the space provided"); 
+        }
+        else if(deliverableLink.length()==0){
+            setFormValidationMessage("Please upload your deliverables"); 
+        }
+        else{
+            setFormValidationMessage("");
+            uploadValidationMessage = saveSubmission();
+            
+        }
+
+        return uploadValidationMessage;
+    }
+    
+    public String saveSubmission(){
+        int rowCount = 0;
+        ThesisDAO aSubmissionDAO = new ThesisDAOImpl();
+        rowCount = aSubmissionDAO.saveSubmission(theThesisModel, theUserModel);
+        if(rowCount>0){
+            
+        }
         
         return null;
     }
@@ -118,8 +166,9 @@ public class UploadController {
     public String upload() throws IOException {
 
         file1.write(getFilename(file1));
-        uploadResult = "File Uploaded Successfully.";
+        setDocumentUploadResult("File Uploaded Successfully.");
         uploadLink = "C:\\java\\glassfish-4.0\\glassfish\\domains\\domain1\\generated\\jsp\\JavaGroupProject\\" + getFilename(file1);
+        theThesisModel.setDeliverableLink(uploadLink);
         setUploadFileName(getFilename(file1));
 
 //        file1.write("C:\\data\\"+getFilename(file1));
@@ -133,7 +182,7 @@ public class UploadController {
 //            if(bytesRead > 0) {  
 //                ?outputStream.write(buffer, 0, bytesRead);
 //            }else {
-//                uploadResult = "Error uploading file. Please try again.";
+//                documentUploadResult = "Error uploading file. Please try again.";
 //                break;  
 //            }                         
 //        }  
@@ -150,6 +199,34 @@ public class UploadController {
             }
         }
         return null;
+    }
+
+    /**
+     * @return the formValidationMessage
+     */
+    public String getFormValidationMessage() {
+        return formValidationMessage;
+    }
+
+    /**
+     * @param formValidationMessage the formValidationMessage to set
+     */
+    public void setFormValidationMessage(String formValidationMessage) {
+        this.formValidationMessage = formValidationMessage;
+    }
+
+    /**
+     * @return the theUserModel
+     */
+    public UserBean getTheUserModel() {
+        return theUserModel;
+    }
+
+    /**
+     * @param theUserModel the theUserModel to set
+     */
+    public void setTheUserModel(UserBean theUserModel) {
+        this.theUserModel = theUserModel;
     }
 
     
