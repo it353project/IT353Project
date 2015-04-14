@@ -30,6 +30,10 @@ public class UploadController {
     private String formValidationMessage;
     private UserBean theUserModel;
 
+        public UploadController() {
+//        theUserModel = new UserBean();
+        theThesisModel = new ThesisBean();
+    }
     /**
      * @return the theThesisModel
      */
@@ -140,9 +144,9 @@ public class UploadController {
         else if(projectAbstract.length()==0){
             setFormValidationMessage("Please paste your abstract in the space provided"); 
         }
-        else if(deliverableLink.length()==0){
-            setFormValidationMessage("Please upload your deliverables"); 
-        }
+//        else if(deliverableLink.length()==0){
+//            setFormValidationMessage("Please upload your deliverables"); 
+//        }
         else{
             setFormValidationMessage("");
             uploadValidationMessage = saveSubmission();
