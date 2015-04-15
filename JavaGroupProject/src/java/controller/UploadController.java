@@ -30,10 +30,17 @@ public class UploadController {
     private String formValidationMessage;
     private UserBean theUserModel;
 
-        public UploadController() {
-//        theUserModel = new UserBean();
+    
+    public UploadController() {
+        
         theThesisModel = new ThesisBean();
+        
     }
+    public UploadController(UserBean theUserModel){
+        super();
+        this.theUserModel = theUserModel;
+    }
+
     /**
      * @return the theThesisModel
      */
@@ -47,8 +54,9 @@ public class UploadController {
     public void setTheThesisModel(ThesisBean theThesisModel) {
         this.theThesisModel = theThesisModel;
     }
+
     /**
-     * 
+     *
      * @return the file1
      */
     public Part getFile1() {
@@ -56,7 +64,7 @@ public class UploadController {
     }
 
     /**
-     * 
+     *
      * @param file1 the file1 to set
      */
     public void setFile1(Part file1) {
@@ -104,10 +112,10 @@ public class UploadController {
     public void setUploadFileName(String uploadFileName) {
         this.uploadFileName = uploadFileName;
     }
-    
-    public String authenticateSubmission(){
-        String uploadValidationMessage =null;
-        
+
+    public String authenticateSubmission() {
+        String uploadValidationMessage = null;
+
         String courseNo = theThesisModel.getCourseID();
         String semester = theThesisModel.getSemesterName();
         String keywords = theThesisModel.getKeywords();
@@ -119,51 +127,43 @@ public class UploadController {
         String committeeMember3 = theThesisModel.getCommitteMember3();
         String projectAbstract = theThesisModel.getProjectAbstract();
         String deliverableLink = theThesisModel.getDeliverableLink();
-        
-        if(courseNo.length()==0){
-            setFormValidationMessage("Please enter your course number"); 
-        }
-        else if(semester.length()==0){
+
+        if (courseNo.length() == 0) {
+            setFormValidationMessage("Please enter your course number");
+        } else if (semester.length() == 0) {
             setFormValidationMessage("Please enter the current semester");
-        }
-        else if(keywords.length()==0){
-            setFormValidationMessage("Please enter a few keywords separated by comma"); 
-        }
-        else if(liveLink.length()==0){
+        } else if (keywords.length() == 0) {
+            setFormValidationMessage("Please enter a few keywords separated by comma");
+        } else if (liveLink.length() == 0) {
             setFormValidationMessage("Please enter the live link for the work");
-        }
-        else if(screenCastLink.length()==0){
-            setFormValidationMessage("Please enter a the link to your screencast"); 
-        }
-        else if(committeeChair.length()==0){
+        } else if (screenCastLink.length() == 0) {
+            setFormValidationMessage("Please enter a the link to your screencast");
+        } else if (committeeChair.length() == 0) {
             setFormValidationMessage("Please enter the name of the assigned committe chair");
-        }
-        else if(committeeMember1.length()==0 || committeeMember2.length()==0 || committeeMember3.length()==0){
-            setFormValidationMessage("Please enter names of your committee members"); 
-        }
-        else if(projectAbstract.length()==0){
-            setFormValidationMessage("Please paste your abstract in the space provided"); 
-        }
-//        else if(deliverableLink.length()==0){
-//            setFormValidationMessage("Please upload your deliverables"); 
-//        }
-        else{
+        } else if (committeeMember1.length() == 0 || committeeMember2.length() == 0 || committeeMember3.length() == 0) {
+            setFormValidationMessage("Please enter names of your committee members");
+        } else if (projectAbstract.length() == 0) {
+            setFormValidationMessage("Please paste your abstract in the space provided");
+        } //        else if(deliverableLink.length()==0){
+        //            setFormValidationMessage("Please upload your deliverables"); 
+        //        }
+        else {
             setFormValidationMessage("");
             uploadValidationMessage = saveSubmission();
-            
+
         }
 
         return uploadValidationMessage;
     }
-    
-    public String saveSubmission(){
+
+    public String saveSubmission() {
         int rowCount = 0;
         ThesisDAO aSubmissionDAO = new ThesisDAOImpl();
         rowCount = aSubmissionDAO.saveSubmission(theThesisModel, theUserModel);
-        if(rowCount>0){
-            
-        }
-        
+//        if(rowCount>0){
+//            
+//        }
+
         return null;
     }
 
@@ -232,7 +232,5 @@ public class UploadController {
     public void setTheUserModel(UserBean theUserModel) {
         this.theUserModel = theUserModel;
     }
-
-    
 
 }

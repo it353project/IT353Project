@@ -16,5 +16,7 @@ import model.UserBean;
 public interface ThesisDAO {
     public int saveSubmission(ThesisBean aSubmissionBean, UserBean aUserBean);
     public int findAccountIDFromName(String givenFullName) ;
+    public int findNextSequenceValue(String sequenceName);
+    public int checkKeywordInDB(String keyword);
     
 }

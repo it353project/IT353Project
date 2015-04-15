@@ -62,6 +62,9 @@ public class ThesisBean {
      * @param topic the topic to set
      */
     public void setTopic(String topic) {
+        if (topic.contains("'")) {
+            topic = topic.replace("'", "''");
+        }
         this.topic = topic;
     }
 
@@ -76,6 +79,9 @@ public class ThesisBean {
      * @param courseID the courseID to set
      */
     public void setCourseID(String courseID) {
+        if (courseID.contains("'")) {
+            courseID = courseID.replace("'", "''");
+        }
         this.courseID = courseID;
     }
 
@@ -90,6 +96,9 @@ public class ThesisBean {
      * @param semesterName the semesterName to set
      */
     public void setSemesterName(String semesterName) {
+        if (semesterName.contains("'")) {
+            semesterName = semesterName.replace("'", "''");
+        }
         this.semesterName = semesterName;
     }
 
@@ -104,6 +113,9 @@ public class ThesisBean {
      * @param keywords the keywords to set
      */
     public void setKeywords(String keywords) {
+        if (keywords.contains("'")) {
+            keywords = keywords.replace("'", "''");
+        }
         this.keywords = keywords;
     }
 
@@ -118,6 +130,9 @@ public class ThesisBean {
      * @param liveLink the liveLink to set
      */
     public void setLiveLink(String liveLink) {
+        if (liveLink.contains("'")) {
+            liveLink = liveLink.replace("'", "''");
+        }
         this.liveLink = liveLink;
     }
 
@@ -132,6 +147,9 @@ public class ThesisBean {
      * @param screencastLink the screencastLink to set
      */
     public void setScreencastLink(String screencastLink) {
+        if (screencastLink.contains("'")) {
+            screencastLink = screencastLink.replace("'", "''");
+        }
         this.screencastLink = screencastLink;
     }
 
@@ -146,6 +164,9 @@ public class ThesisBean {
      * @param committeeChair the committeeChair to set
      */
     public void setCommitteeChair(String committeeChair) {
+        if (committeeChair.contains("'")) {
+            committeeChair = committeeChair.replace("'", "''");
+        }
         this.committeeChair = committeeChair;
     }
 
@@ -160,6 +181,9 @@ public class ThesisBean {
      * @param committeMember1 the committeMember1 to set
      */
     public void setCommitteMember1(String committeMember1) {
+        if (committeMember1.contains("'")) {
+            committeMember1 = committeMember1.replace("'", "''");
+        }
         this.committeMember1 = committeMember1;
     }
 
@@ -174,6 +198,9 @@ public class ThesisBean {
      * @param committeMember2 the committeMember2 to set
      */
     public void setCommitteMember2(String committeMember2) {
+        if (committeMember2.contains("'")) {
+            committeMember2 = committeMember2.replace("'", "''");
+        }
         this.committeMember2 = committeMember2;
     }
 
@@ -188,6 +215,9 @@ public class ThesisBean {
      * @param committeMember3 the committeMember3 to set
      */
     public void setCommitteMember3(String committeMember3) {
+        if (committeMember3.contains("'")) {
+            committeMember3 = committeMember3.replace("'", "''");
+        }
         this.committeMember3 = committeMember3;
     }
 
@@ -202,6 +232,9 @@ public class ThesisBean {
      * @param projectAbstract the projectAbstract to set
      */
     public void setProjectAbstract(String projectAbstract) {
+        if (projectAbstract.contains("'")) {
+            projectAbstract = projectAbstract.replace("'", "''");
+        }
         this.projectAbstract = projectAbstract;
     }
 
@@ -216,6 +249,9 @@ public class ThesisBean {
      * @param deliverableLink the deliverableLink to set
      */
     public void setDeliverableLink(String deliverableLink) {
+        if (deliverableLink.contains("'")) {
+            deliverableLink = deliverableLink.replace("'", "''");
+        }
         this.deliverableLink = deliverableLink;
     }
 
@@ -230,6 +266,9 @@ public class ThesisBean {
      * @param uploadDate the uploadDate to set
      */
     public void setUploadDate(String uploadDate) {
+        if (uploadDate.contains("'")) {
+            uploadDate = uploadDate.replace("'", "''");
+        }
         this.uploadDate = uploadDate;
     }
 
@@ -272,6 +311,9 @@ public class ThesisBean {
      * @param submissionStatus the submissionStatus to set
      */
     public void setSubmissionStatus(String submissionStatus) {
+        if (submissionStatus.contains("'")) {
+            submissionStatus = submissionStatus.replace("'", "''");
+        }
         this.submissionStatus = submissionStatus;
     }
     
