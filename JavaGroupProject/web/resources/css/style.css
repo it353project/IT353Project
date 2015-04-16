@@ -1,0 +1,10 @@
+.coreDiv {
+    width: 400px;
+    height: 360px;
+    margin: 0 auto;
+    margin-top: 50px;
+    margin-bottom: 50px;
+    border: 1px solid #000;
+    background-color: #EAEBD8; 
+}
+
