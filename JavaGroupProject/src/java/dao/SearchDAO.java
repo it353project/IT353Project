@@ -6,6 +6,7 @@
 
 package dao;
 
+import java.util.ArrayList;
 import model.SearchBean;
 
 /**
@@ -13,5 +14,5 @@ import model.SearchBean;
  * @author it3530219
  */
 public interface SearchDAO {
-    public int searchRequest(SearchBean aSearch);     
+    public ArrayList searchRequest(SearchBean aSearch);     
 }
