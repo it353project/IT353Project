@@ -6,15 +6,10 @@
 
 package controller;
 
-import dao.UserDAO;
-import dao.UserDAOImpl;
-import java.util.ArrayList;
-import javax.faces.application.ConfigurableNavigationHandler;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-import javax.faces.context.FacesContext;
-import javax.faces.event.ComponentSystemEvent;
 import model.SearchBean;
+import static org.apache.taglibs.standard.functions.Functions.split;
 
 /**
  *
@@ -40,7 +35,37 @@ public class SearchController {
     
    
     public void validateSearch(){
+        /* Validate that the form contains valid search criteria */
+        /* Check to see that the user's entered at least one search critera. */
+        if ( theModel.getAuthorName().equals(null) &&
+                theModel.getCourseNo().equals(null) &&
+                theModel.getKeywordString().equals(null) && 
+                    ( theModel.getStartDate().equals(null) && 
+                      theModel.getEndDate().equals(null)
+                    )
+            ){
+            /*Status message shows that the user needs to enter *something* */
+        }
         
+        /*Ensure that the values entered in the date fields are, in fact, dates.
+          Prime faces may already do this naturally...*/
+        
+        /* Ensure that startDate comes before endDate */
+        if (theModel.getStartDate().compareTo(theModel.getEndDate()) > 0){
+            /* Status message showing that the date range isn't valid. */
+        }
+        /* Parse out keywords */
+        theModel.setKeywords(split(theModel.getKeywordString(),","));
+        
+        /* Perform search */
+        this.performSearch();
+    }
+    
+    private void performSearch(){
+        /* This is run once validation completes. It will perform an SQL query, 
+        and then populate the SearchBean's "ThesisBean" array with the results.
+        */ 
+      
     }
     
     
