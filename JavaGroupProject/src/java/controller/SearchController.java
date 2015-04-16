@@ -39,7 +39,7 @@ public class SearchController {
         /* Check to see that the user's entered at least one search critera. */
         if ( theModel.getAuthorName().equals(null) &&
                 theModel.getCourseNo().equals(null) &&
-                theModel.getKeywordString().equals(null) && 
+                theModel.getKeywords().equals(null) && 
                     ( theModel.getStartDate().equals(null) && 
                       theModel.getEndDate().equals(null)
                     )
@@ -54,8 +54,6 @@ public class SearchController {
         if (theModel.getStartDate().compareTo(theModel.getEndDate()) > 0){
             /* Status message showing that the date range isn't valid. */
         }
-        /* Parse out keywords */
-        theModel.setKeywords(split(theModel.getKeywordString(),","));
         
         /* Perform search */
         this.performSearch();
