@@ -6,6 +6,7 @@
 
 package model;
 
+import java.sql.ResultSet;
 import java.util.Date;
 
 /**
@@ -15,11 +16,10 @@ import java.util.Date;
 public class SearchBean {
     private String authorName;
     private String courseNo;
-    private String keywordString;
-    private String[] keywords;
+    private String keywords;
     private Date startDate;
     private Date endDate;
-    private ThesisBean[] results;
+    private ResultSet results;
 
     /**
      * @return the authorName
@@ -47,20 +47,6 @@ public class SearchBean {
      */
     public void setCourseNo(String courseNo) {
         this.courseNo = courseNo;
-    }
-
-    /**
-     * @return the keywordString
-     */
-    public String getKeywordString() {
-        return keywordString;
-    }
-
-    /**
-     * @param keywordString the keywordString to set
-     */
-    public void setKeywordString(String keywordString) {
-        this.keywordString = keywordString;
     }
 
     /**
@@ -94,28 +80,28 @@ public class SearchBean {
     /**
      * @return the keywords
      */
-    public String[] getKeywords() {
+    public String getKeywords() {
         return keywords;
     }
 
     /**
      * @param keywords the keywords to set
      */
-    public void setKeywords(String[] keywords) {
+    public void setKeywords(String keywords) {
         this.keywords = keywords;
     }
 
     /**
      * @return the results
      */
-    public ThesisBean[] getResults() {
+    public ResultSet getResults() {
         return results;
     }
 
     /**
      * @param results the results to set
      */
-    public void setResults(ThesisBean[] results) {
+    public void setResults(ResultSet results) {
         this.results = results;
     }
             
