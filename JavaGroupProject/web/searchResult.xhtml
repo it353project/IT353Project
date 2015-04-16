@@ -3,17 +3,18 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
-       xmlns:p="http://primefaces.org/ui">
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
 
     <h:head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <h:outputStylesheet library="css" name="style.css"/>
         <h:outputStylesheet name="./css/default.css"/>
         <h:outputStylesheet name="./css/cssLayout.css"/>
         <title>Master Template</title>
     </h:head>
 
     <h:body>
-
         <div id="top">
             <ui:insert name="top">
                 <center style="font-size: 300%;">Illinois State University - Thesis Tracker</center>
@@ -23,11 +24,28 @@
         <div id="content" class="center_content">
             <ui:insert name="content">
                 <br/><br/><center><h2>Search Results</h2></center>
-                <div id="login" style ="width:400px; height:360px; margin: 0 auto; margin-top: 50px; margin-bottom: 50px; border: 1px solid #000; background-color: #EAEBD8">
+                <div id="login" class="coreDiv">
                     <h:form id="searchResultForm" style="">
-                        <p:dataTable id="searchResults" var="car" value="#{searchController.theModel.results}">
-
-                        </p:dataTable>
+                        <p:dataTable id="singleDT" var="car" value="" selectionMode="single" selection="" rowKey="">
+                        <f:facet name="header">
+                            Single with Row Click
+                        </f:facet>
+                        <p:column headerText="Author">
+                            <h:outputText value="Author" />
+                        </p:column>
+                        <p:column headerText="Course No.">
+                            <h:outputText value="Course No." />
+                        </p:column>
+                        <p:column headerText="Keywords">
+                            <h:outputText value="Keywords" />
+                        </p:column>
+                        <p:column headerText="Date">
+                            <h:outputText value="Date" />
+                        </p:column>
+                        <f:facet name="footer">
+                            <p:commandButton process="singleDT" update=":form:carDetail" icon="ui-icon-search" value="View" oncomplete="PF('carDialog').show()" />
+                        </f:facet>
+                    </p:dataTable>
                     </h:form>
                 </div>
             </ui:insert>
