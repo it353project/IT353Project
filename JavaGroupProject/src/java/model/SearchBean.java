@@ -15,7 +15,8 @@ import java.util.Date;
 public class SearchBean {
     private String authorName;
     private String courseNo;
-    private String[] keywordString;
+    private String keywordString;
+    private String[] keywords;
     private Date startDate;
     private Date endDate;
     private ThesisBean[] results;
@@ -51,14 +52,14 @@ public class SearchBean {
     /**
      * @return the keywordString
      */
-    public String[] getKeywordString() {
+    public String getKeywordString() {
         return keywordString;
     }
 
     /**
      * @param keywordString the keywordString to set
      */
-    public void setKeywordString(String[] keywordString) {
+    public void setKeywordString(String keywordString) {
         this.keywordString = keywordString;
     }
 
@@ -88,6 +89,34 @@ public class SearchBean {
      */
     public void setEndDate(Date endDate) {
         this.endDate = endDate;
+    }
+
+    /**
+     * @return the keywords
+     */
+    public String[] getKeywords() {
+        return keywords;
+    }
+
+    /**
+     * @param keywords the keywords to set
+     */
+    public void setKeywords(String[] keywords) {
+        this.keywords = keywords;
+    }
+
+    /**
+     * @return the results
+     */
+    public ThesisBean[] getResults() {
+        return results;
+    }
+
+    /**
+     * @param results the results to set
+     */
+    public void setResults(ThesisBean[] results) {
+        this.results = results;
     }
             
     
