@@ -11,6 +11,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import model.SearchBean;
 
 /**
@@ -19,38 +20,12 @@ import model.SearchBean;
  */
 public class SearchDAOImpl implements SearchDAO {
 
-    //used in signUp Controller, for adding new account details to db
+    /* Performs a search against the database, using the searchBean's variables. */
 
     @Override
-    public int searchRequest(SearchBean aSearch) {
+    public ArrayList searchRequest(SearchBean aSearch) {
 
-        try {
-            Class.forName("org.apache.derby.jdbc.ClientDriver");
-        } catch (ClassNotFoundException e) {
-            System.err.println(e.getMessage());
-            System.exit(0);
-        }
-
-        int rowCount = 0;
-        int rowCountLogin = 0;
-        try {
-            String myDB = "jdbc:derby://localhost:1527/IT353";
-            Connection DBConn = DriverManager.getConnection(myDB, "itkstu", "student");
-
-            String insertString;
-            Statement stmt = DBConn.createStatement();
-            insertString = "";
-
-            rowCount = stmt.executeUpdate(insertString);
-            System.out.println("Search performed:" + insertString);
-
-            DBConn.close();
-
-        } catch (SQLException e) {
-            System.err.println("ERROR: Problems with SQL insert in createAccount()");
-            System.err.println(e.getMessage());
-        }
-        return rowCount;
+        return null;
     }
 
 
