@@ -27,7 +27,7 @@
                     <h:form id="searchForm">
                         <p:inputText id="author" placeholder="Author Name" value="#{searchController.theModel.authorName}"/><br/>
                         <p:inputText id="courseNo" placeholder="Course ID" value="#{searchController.theModel.courseNo}"/><br/>
-                        <p:inputText id="keywords" placeholder="Keywords" value="#{searchController.theModel.keywordString}"/><br/>
+                        <p:inputText id="keywords" placeholder="Keywords" value="#{searchController.theModel.keywords}"/><br/>
                         <p:calendar id="fromDate" value="#{searchController.theModel.startDate}" showOn="button" placeholder="Start Date" /> to  
                         <p:calendar id="toDate" value="#{searchController.theModel.endDate}" showOn="button" placeholder="End Date" /> <br/>
                         <h:commandButton id="submitSearch" value="Search" action="#{searchController.validateSearch()}" style="width:200px;height:25px"/>
