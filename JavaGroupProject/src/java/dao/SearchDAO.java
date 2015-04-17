@@ -6,7 +6,7 @@
 
 package dao;
 
-import java.sql.ResultSet;
+import java.util.ArrayList;
 import model.SearchBean;
 
 /**
@@ -14,5 +14,5 @@ import model.SearchBean;
  * @author it3530219
  */
 public interface SearchDAO {
-    public ResultSet searchRequest(SearchBean aSearch);     
+    public ArrayList searchRequest(SearchBean aSearch);     
 }
