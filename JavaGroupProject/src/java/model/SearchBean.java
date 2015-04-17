@@ -7,6 +7,7 @@
 package model;
 
 import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.Date;
 
 /**
@@ -19,7 +20,7 @@ public class SearchBean {
     private String keywords;
     private Date startDate;
     private Date endDate;
-    private ResultSet results;
+    private ArrayList results;
 
     /**
      * @return the authorName
@@ -32,7 +33,7 @@ public class SearchBean {
      * @param authorName the authorName to set
      */
     public void setAuthorName(String authorName) {
-        this.authorName = authorName;
+        this.authorName = authorName.trim();
     }
 
     /**
@@ -46,7 +47,7 @@ public class SearchBean {
      * @param courseNo the courseNo to set
      */
     public void setCourseNo(String courseNo) {
-        this.courseNo = courseNo;
+        this.courseNo = courseNo.trim();
     }
 
     /**
@@ -88,20 +89,20 @@ public class SearchBean {
      * @param keywords the keywords to set
      */
     public void setKeywords(String keywords) {
-        this.keywords = keywords;
+        this.keywords = keywords.trim();
     }
 
     /**
      * @return the results
      */
-    public ResultSet getResults() {
+    public ArrayList getResults() {
         return results;
     }
 
     /**
      * @param results the results to set
      */
-    public void setResults(ResultSet results) {
+    public void setResults(ArrayList results) {
         this.results = results;
     }
             
