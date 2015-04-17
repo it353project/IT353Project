@@ -19,10 +19,11 @@ import model.SearchBean;
  * @author it3530219
  */
 public class SearchDAOImpl implements SearchDAO {
-
+    String driverName = "org.apache.derby.jdbc.ClientDriver";
+    String connStr = "jdbc:derby://localhost:1527/VotingDB";
     /* Performs a search against the database, using the searchBean's variables. */
     @Override
-    public ResultSet searchRequest(SearchBean aSearch) {
+    public ArrayList searchRequest(SearchBean aSearch) {
         /* Takes in the SearchBean, builds query. Depending on what the user has 
         filled in for search criteria, the query will change. Each field will 
         add an AND condition to the select statement, as each one should narrow
@@ -36,6 +37,7 @@ public class SearchDAOImpl implements SearchDAO {
         
         String accountNameSearch = null;
         String keywordSearch = null;
+        String query = null;
         
         /* Format Name into firstName, lastName, if AuthorName was used as a search criteria.
         The name field that's passed by SearchBean should be first parsed apart, first by ",",
@@ -74,19 +76,50 @@ public class SearchDAOImpl implements SearchDAO {
                     keywords = keywords + "'" + keywordHolder[i] + "',";
                 }        
             }
-            
         }
-        
-        
+          
         /* Build the basic template for */
         String baseSelect = "SELECT * FROM ";
         String whereClause = "WHERE ("
                 + "ACCOUNT.FIRSTNAME LIKE '" + firstName + "'"
                 + "KEYWORD.KEYWORD IN (" + keywords + ")";
+        
         /* Drop any views created */
-        return null;
+        /* Pass the now-built query on to the database. */
+        ArrayList searchResults = performSearch(query);
+        
+        /* Return the search results */
+        return searchResults;
     }
 
+    public ArrayList performSearch(String query){
+        ArrayList searchResult = new ArrayList();
+        Connection DBConn = null;
+        
+        try {
+            /* Connection code deliberately ripped-off from B. Lim */
+            DBHelper.loadDriver(driverName);
+            DBConn = DBHelper.connect2DB(connStr, "itkstu", "student");
 
+            // With the connection made, create a statement to talk to the DB server.
+            // Create a SQL statement to query, retrieve the rows one by one (by going to the
+            // columns), and formulate the result string to send back to the client.
+            Statement stmt = DBConn.createStatement();
+            ResultSet rs = stmt.executeQuery(query);
+  
+            rs.close();
+            stmt.close();
+        } catch (Exception e) {
+            System.err.println("ERROR: Problems with SQL select");
+            e.printStackTrace();
+        }
+        try {
+            DBConn.close();
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+        
+        return searchResult;
+    }
 
 }
