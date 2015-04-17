@@ -205,13 +205,13 @@ public class SignUpController {
         int rowCount = aSignUpDAO.createAccount(theModel); // Doing anything with the object after this?
         if (rowCount == 1)
         {
-            theModel.setIsLoggedIn("NotLoggedIn");
+            theModel.setIsLoggedIn(false);
             sendEmailForApproval();
             return "signUpConfirmation.xhtml"; // navigate to "signUpConfirmation.xhtml"
         }
         else
         {
-            theModel.setIsLoggedIn("NotLoggedIn");
+            theModel.setIsLoggedIn(false);
             return "error.xhml"; 
         }
     }
