@@ -11,40 +11,39 @@
     <h:body>
         <ui:composition template="masterTemplate.xhtml">
             <ui:define name="content">
-                <center><br/><h2>Dashboard</h2>              
-                    
-                        <br/><br/><br/>
+                <center><br/><h2>Dashboard</h2></center>
 
-                        <h:form>
-                            
-                            <p:dashboard id="board" model="#{dashboardController.model}">
-                                <p:ajax event="reorder" listener="#{dashboardController.handleReorder}" update="msgs" />
+                <br/><br/><br/>
+               
+                    <h:form >
 
-                                <p:panel id="sports" header="Sports">
-                                    <h:outputText value="Sports Content" />
-                                </p:panel>
+                        <p:dashboard id="board" model="#{dashboardController.model}">
+                            <p:ajax event="reorder" listener="#{dashboardController.handleReorder}" />
 
-                                <p:panel id="finance" header="Finance">
-                                    <h:outputText value="Finance Content" />
-                                </p:panel>
+                            <p:panel id="sports" header="Sports">
+                                <h:outputText value="Sports Content" />
+                            </p:panel>
 
-                                <p:panel id="lifestyle" header="Lifestyle">
-                                    <h:outputText value="Lifestyle Content"  />
-                                </p:panel>
+                            <p:panel id="finance" header="Finance">
+                                <h:outputText value="Finance Content" />
+                            </p:panel>
 
-                                <p:panel id="weather" header="Weather">
-                                    <h:outputText value="Weather Content" />
-                                </p:panel>
+                            <p:panel id="lifestyle" header="Lifestyle">
+                                <h:outputText value="Lifestyle Content"  />
+                            </p:panel>
 
-                                <p:panel id="politics" header="Politics">
-                                    <h:outputText value="Politics Content" />
-                                </p:panel>
-                            </p:dashboard>
+                            <p:panel id="weather" header="Weather">
+                                <h:outputText value="Weather Content" />
+                            </p:panel>
 
-                            <div style="clear:both" />
-                        </h:form>
+                            <p:panel id="politics" header="Politics">
+                                <h:outputText value="Politics Content" />
+                            </p:panel>
+                        </p:dashboard>
 
-                    </center>
+                        <div style="clear:both" />
+                    </h:form>
+                
             </ui:define>
         </ui:composition>
     </h:body>
