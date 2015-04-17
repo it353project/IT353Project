@@ -21,7 +21,7 @@ public class UserBean {
     private String securityAnswer;
     private String accountType;
     private String accountJustification;
-    private String isLoggedIn;
+    private boolean isLoggedIn = false;
 
     /**
      * Creates a new instance of SignUpBean
@@ -215,14 +215,14 @@ public class UserBean {
     /**
      * @return the isLoggedIn
      */
-    public String getIsLoggedIn() {
+    public boolean getIsLoggedIn() {
         return isLoggedIn;
     }
 
     /**
      * @param isLoggedIn the isLoggedIn to set
      */
-    public void setIsLoggedIn(String isLoggedIn) {
+    public void setIsLoggedIn(boolean isLoggedIn) {
         this.isLoggedIn = isLoggedIn;
     }
 
