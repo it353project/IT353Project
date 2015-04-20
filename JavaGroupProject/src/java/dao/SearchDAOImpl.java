@@ -48,9 +48,9 @@ public class SearchDAOImpl implements SearchDAO {
         spaces or commas are found, we will assume it's a lastname, and omit firstname from the search.*/
         if(aSearch.getAuthorName() != null){
             stringName = aSearch.getAuthorName().split(",", 2);
-            if (stringName == null){
+            if (stringName.length == 1){
                 stringName = aSearch.getAuthorName().split(" ", 2);
-                if(stringName == null){
+                if(stringName.length == 1){
                     lastName = aSearch.getAuthorName();
                     firstName = null;
                     accountNameSearch = "IT353.ACCOUNT.LASTNAME LIKE '%" +
@@ -72,7 +72,7 @@ public class SearchDAOImpl implements SearchDAO {
         }
         
         /* Disassemble keywords, insert "'"s, reassemble, if there are keywords */
-        if(aSearch.getKeywords() != null){
+        if(aSearch.getKeywords().length() != 0){
             keywordHolder = aSearch.getKeywords().split(",");
             for(int i=0; i < keywordHolder.length; i++){
                 if (i == keywordHolder.length){
@@ -90,14 +90,14 @@ public class SearchDAOImpl implements SearchDAO {
                 + "IT353.ACCOUNT.LASTNAME, IT353.THESIS.THESISNAME,"
                 + " IT353.THESIS.UPLOADDATE ";
         String fromClause = "FROM IT353.ACCOUNT, IT353.THESIS ";
-        String joinClause = "JOIN IT353.THESIS ON IT353.THESIS.ACCOUNTID = IT353.ACCOUNT.ACCOUNTID" +
-            "JOIN IT353.KEYASSIGN ON IT353.KEYASSIGN.THESISID = IT353.THESIS.THESISID" +
-            "JOIN IT353.KEYWORD ON IT353.KEYWORD.KEYWORDID = IT353.KEYASSIGN.KEYWORDID";
+        String joinClause = "JOIN IT353.THESIS ON IT353.THESIS.ACCOUNTID = IT353.ACCOUNT.ACCOUNTID " +
+            "JOIN IT353.KEYASSIGN ON IT353.KEYASSIGN.THESISID = IT353.THESIS.THESISID " +
+            "JOIN IT353.KEYWORD ON IT353.KEYWORD.KEYWORDID = IT353.KEYASSIGN.KEYWORDID ";
            
         String whereClause = "WHERE ";
         
         /* Add author name to the WHERE clause if we have one */
-        if(accountNameSearch != null){
+        if(!accountNameSearch.isEmpty()){
             whereClause += accountNameSearch;
             clauseCounter++;
         }
@@ -111,13 +111,13 @@ public class SearchDAOImpl implements SearchDAO {
             whereClause += " AND " + keywordSearch;
             clauseCounter++;
         }
-        
+
         /* Adds the course number, if we've got one. If there has already been 
         an addition to the WHERE clause, tack on an AND in front of this one. */
-        if (aSearch.getCourseNo() != null && clauseCounter == 0){
+        if (!aSearch.getCourseNo().isEmpty() && clauseCounter == 0){
             whereClause += "IT353.THESIS.COURSENO = " + aSearch.getCourseNo();
             clauseCounter++;
-        }else if(aSearch.getCourseNo() != null){
+        }else if(!aSearch.getCourseNo().isEmpty()){
             whereClause += " AND IT353.THESIS.COURSENO = " + aSearch.getCourseNo();
             clauseCounter++;
         }
@@ -140,7 +140,7 @@ public class SearchDAOImpl implements SearchDAO {
             clauseCounter++;            
         }
         
-        /* Drop any views created */
+        query = baseSelect + fromClause + joinClause + whereClause;
         /* Pass the now-built query on to the database. */
         ArrayList searchResults = performSearch(query);
         
