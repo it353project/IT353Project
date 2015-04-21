@@ -28,8 +28,8 @@
                         <p:inputText id="author" placeholder="Author Name" value="#{searchController.theModel.authorName}"/><br/>
                         <p:inputText id="courseNo" placeholder="Course ID" value="#{searchController.theModel.courseNo}"/><br/>
                         <p:inputText id="keywords" placeholder="Keywords" value="#{searchController.theModel.keywords}"/><br/>
-                        <p:calendar id="fromDate" value="#{searchController.theModel.startDate}" showOn="button" placeholder="Start Date" readonly="TRUE" /> to  
-                        <p:calendar id="toDate" value="#{searchController.theModel.endDate}" showOn="button" placeholder="End Date" readonly="TRUE"/> <br/>
+                        <p:calendar id="fromDate" value="#{searchController.theModel.startDate}" placeholder="Start Date" pattern="MM-dd-yyyy" mask="true" /> to  
+                        <p:calendar id="toDate" value="#{searchController.theModel.endDate}" placeholder="End Date" pattern="MM-dd-yyyy" mask="true"/> <br/>
                         <h:commandButton id="submitSearch" value="Search" action="#{searchController.performSearch()}" style="width:200px;height:25px"/>
                     </h:form>
                 </div>
