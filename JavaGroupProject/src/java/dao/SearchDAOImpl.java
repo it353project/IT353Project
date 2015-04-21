@@ -9,6 +9,7 @@ import controller.SearchController;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -19,8 +20,6 @@ import model.SearchBean;
  * @author it3530219
  */
 public class SearchDAOImpl implements SearchDAO {
-    String driverName = "org.apache.derby.jdbc.ClientDriver";
-    String connStr = "jdbc:derby://localhost:1527/VotingDB";
     /* Performs a search against the database, using the searchBean's variables. */
     @Override
     public ArrayList searchRequest(SearchBean aSearch) {
@@ -29,15 +28,15 @@ public class SearchDAOImpl implements SearchDAO {
         add an AND condition to the select statement, as each one should narrow
         the possible parameters. */
         
-        String[] stringName = null;
-        String[] keywordHolder = null;
-        String keywords = null;
-        String firstName = null;
-        String lastName = null;
+        String[] stringName;
+        String[] keywordHolder;
+        String keywords = "";
+        String firstName = "";
+        String lastName = "";
         
-        String accountNameSearch = null;
-        String keywordSearch = null;
-        String query = null;
+        String accountNameSearch = "";
+        String keywordSearch = "";
+        String query = "";
         
         int clauseCounter = 0;
         
@@ -46,7 +45,7 @@ public class SearchDAOImpl implements SearchDAO {
         then by " ". If a comma is found, we'll assume that they've put lastname first, like 
         "Doe, John". If no comma is found, but a space is found, we'll assume "John Doe". If no
         spaces or commas are found, we will assume it's a lastname, and omit firstname from the search.*/
-        if(aSearch.getAuthorName() != null){
+        if(!aSearch.getAuthorName().equals("")){
             stringName = aSearch.getAuthorName().split(",", 2);
             if (stringName.length == 1){
                 stringName = aSearch.getAuthorName().split(" ", 2);
@@ -75,7 +74,7 @@ public class SearchDAOImpl implements SearchDAO {
         if(aSearch.getKeywords().length() != 0){
             keywordHolder = aSearch.getKeywords().split(",");
             for(int i=0; i < keywordHolder.length; i++){
-                if (i == keywordHolder.length){
+                if (i == keywordHolder.length-1){
                     /* If it's the last one, no comma at end. */
                     keywords = keywords + "'" + keywordHolder[i] + "'";
                 }else{
@@ -86,10 +85,9 @@ public class SearchDAOImpl implements SearchDAO {
         }
           
         /* Build the basic template for */
-        String baseSelect = "SELECT IT353.ACCOUNT.FIRSTNAME, "
-                + "IT353.ACCOUNT.LASTNAME, IT353.THESIS.THESISNAME,"
+        String baseSelect = "SELECT DISTINCT IT353.ACCOUNT.FIRSTNAME || ' ' || IT353.ACCOUNT.LASTNAME AS AUTHORNAME, IT353.THESIS.THESISNAME,"
                 + " IT353.THESIS.UPLOADDATE ";
-        String fromClause = "FROM IT353.ACCOUNT, IT353.THESIS ";
+        String fromClause = "FROM IT353.ACCOUNT ";
         String joinClause = "JOIN IT353.THESIS ON IT353.THESIS.ACCOUNTID = IT353.ACCOUNT.ACCOUNTID " +
             "JOIN IT353.KEYASSIGN ON IT353.KEYASSIGN.THESISID = IT353.THESIS.THESISID " +
             "JOIN IT353.KEYWORD ON IT353.KEYWORD.KEYWORDID = IT353.KEYASSIGN.KEYWORDID ";
@@ -104,10 +102,10 @@ public class SearchDAOImpl implements SearchDAO {
         
         /* Adds the keyword search, if we've got one.If there has already been 
         an addition to the WHERE clause, tack on an AND in front of this one. */
-        if(keywordSearch != null && clauseCounter > 0){
+        if(!keywordSearch.equals("") && clauseCounter > 0){
             whereClause += keywordSearch;
             clauseCounter++;
-        }else if(keywordSearch != null && clauseCounter == 0){
+        }else if(!keywordSearch.equals("") && clauseCounter == 0){
             whereClause += " AND " + keywordSearch;
             clauseCounter++;
         }
@@ -149,32 +147,42 @@ public class SearchDAOImpl implements SearchDAO {
     }
 
     public ArrayList performSearch(String query){
-        ArrayList searchResult = new ArrayList();
-        Connection DBConn = null;
-        
+        ArrayList<String> searchResult = new ArrayList<String>(); 
+           
         try {
-            /* Connection code deliberately ripped-off from B. Lim */
-            DBHelper.loadDriver(driverName);
-            DBConn = DBHelper.connect2DB(connStr, "itkstu", "student");
-
-            // With the connection made, create a statement to talk to the DB server.
-            // Create a SQL statement to query, retrieve the rows one by one (by going to the
-            // columns), and formulate the result string to send back to the client.
+            Class.forName("org.apache.derby.jdbc.ClientDriver");
+        } catch (ClassNotFoundException e) {
+            System.err.println(e.getMessage());
+            System.exit(0);
+        }
+        
+        try {         
+            String myDB = "jdbc:derby://localhost:1527/IT353";  
+            Connection DBConn = DriverManager.getConnection(myDB, "itkstu", "student");
             Statement stmt = DBConn.createStatement();
             ResultSet rs = stmt.executeQuery(query);
-  
+            
+            ResultSetMetaData metadata = rs.getMetaData();
+            int noOfColumns = metadata.getColumnCount();
+
+            while (rs.next()) {              
+                int i = 1;
+                while(i <= noOfColumns) {
+                    searchResult.add(rs.getString(i++));
+                }
+                    System.out.println(rs.getString("AUTHORNAME"));
+                    System.out.println(rs.getString("THESISNAME"));
+                    System.out.println(rs.getString("UPLOADDATE"));                    
+            }
+            
             rs.close();
             stmt.close();
+            DBConn.close();
         } catch (Exception e) {
-            System.err.println("ERROR: Problems with SQL select");
+            System.err.println(e.getMessage());
             e.printStackTrace();
         }
-        try {
-            DBConn.close();
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
-        
+                   
         return searchResult;
     }
 
