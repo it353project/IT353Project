@@ -6,21 +6,23 @@
 
 package model;
 
-import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  *
  * @author it3530229
  */
 public class SearchBean {
+    private String thesisID;
     private String authorName;
+    private String thesisName;
     private String courseNo;
     private String keywords;
     private Date startDate;
     private Date endDate;
-    private ArrayList results;
+    private List results;
 
     /**
      * @return the authorName
@@ -95,7 +97,7 @@ public class SearchBean {
     /**
      * @return the results
      */
-    public ArrayList getResults() {
+    public List getResults() {
         return results;
     }
 
@@ -104,6 +106,34 @@ public class SearchBean {
      */
     public void setResults(ArrayList results) {
         this.results = results;
+    }
+
+    /**
+     * @return the thesisName
+     */
+    public String getThesisName() {
+        return thesisName;
+    }
+
+    /**
+     * @param thesisName the thesisName to set
+     */
+    public void setThesisName(String thesisName) {
+        this.thesisName = thesisName;
+    }
+
+    /**
+     * @return the thesisID
+     */
+    public String getThesisID() {
+        return thesisID;
+    }
+
+    /**
+     * @param thesisID the thesisID to set
+     */
+    public void setThesisID(String thesisID) {
+        this.thesisID = thesisID;
     }
             
     
