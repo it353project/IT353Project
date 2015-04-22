@@ -6,81 +6,66 @@
 
 package model;
 
-import java.util.Date;
-
 /**
  *
  * @author it3530229
  */
 public class ThesisBean {
-    private int thesisID;
-    private int accountID;
-    private String thesisName;
-    private String semesterName;
+    private String thesisID;
+    private String accountID;
     private String courseID;
     private String committeeID;
-    private String abstractCLOB;
-    private String attachmentLink;
+    private String keyAssignID;
+    private String abstractID;
+    private String attachmentID;
     private String screencastLink;
     private String liveLink;
     private String uploadDate;
-    private int noTimesViewed;
-    private int noTimesDown;
+    private int numberOfViews;
+    private int downloadsCount;
 
+    public ThesisBean(String thesisID, String accountID, String courseID, String committeeID, String keyAssignID, String abstractID,
+            String attachmentID, String screencastLink, String liveLink, String uploadDate, int numberOfViews,
+            int downloadsCount){
+        this.thesisID = thesisID;
+        this.accountID = accountID;
+        this.courseID = courseID;
+        this.committeeID = committeeID;
+        this.keyAssignID = keyAssignID;
+        this.abstractID = abstractID;
+        this.attachmentID = attachmentID;
+        this.screencastLink = screencastLink;
+        this.liveLink = liveLink;
+        this.uploadDate = uploadDate;
+        this.numberOfViews = numberOfViews;
+        this.downloadsCount = downloadsCount;
+    }
     /**
      * @return the thesisID
      */
-    public int getThesisID() {
+    public String getThesisID() {
         return thesisID;
     }
 
     /**
      * @param thesisID the thesisID to set
      */
-    public void setThesisID(int thesisID) {
+    public void setThesisID(String thesisID) {
         this.thesisID = thesisID;
     }
 
     /**
      * @return the accountID
      */
-    public int getAccountID() {
+    public String getAccountID() {
         return accountID;
     }
 
     /**
      * @param accountID the accountID to set
      */
-    public void setAccountID(int accountID) {
+    public void setAccountID(String accountID) {
         this.accountID = accountID;
-    }
-
-    /**
-     * @return the thesisName
-     */
-    public String getThesisName() {
-        return thesisName;
-    }
-
-    /**
-     * @param thesisName the thesisName to set
-     */
-    public void setThesisName(String thesisName) {
-        this.thesisName = thesisName;
-    }
-
-    /**
-     * @return the semesterName
-     */
-    public String getSemesterName() {
-        return semesterName;
-    }
-
-    /**
-     * @param semesterName the semesterName to set
-     */
-    public void setSemesterName(String semesterName) {
-        this.semesterName = semesterName;
     }
 
     /**
@@ -112,31 +97,45 @@ public class ThesisBean {
     }
 
     /**
-     * @return the abstractCLOB
+     * @return the keyAssignID
      */
-    public String getAbstractCLOB() {
-        return abstractCLOB;
+    public String getKeyAssignID() {
+        return keyAssignID;
     }
 
     /**
-     * @param abstractCLOB the abstractCLOB to set
+     * @param keyAssignID the keyAssignID to set
      */
-    public void setAbstractCLOB(String abstractCLOB) {
-        this.abstractCLOB = abstractCLOB;
+    public void setKeyAssignID(String keyAssignID) {
+        this.keyAssignID = keyAssignID;
     }
 
     /**
-     * @return the attachmentLink
+     * @return the abstractID
      */
-    public String getAttachmentLink() {
-        return attachmentLink;
+    public String getAbstractID() {
+        return abstractID;
     }
 
     /**
-     * @param attachmentLink the attachmentLink to set
+     * @param abstractID the abstractID to set
      */
-    public void setAttachmentLink(String attachmentLink) {
-        this.attachmentLink = attachmentLink;
+    public void setAbstractID(String abstractID) {
+        this.abstractID = abstractID;
+    }
+
+    /**
+     * @return the attachmentID
+     */
+    public String getAttachmentID() {
+        return attachmentID;
+    }
+
+    /**
+     * @param attachmentID the attachmentID to set
+     */
+    public void setAttachmentID(String attachmentID) {
+        this.attachmentID = attachmentID;
     }
 
     /**
@@ -182,33 +181,32 @@ public class ThesisBean {
     }
 
     /**
-     * @return the noTimesViewed
+     * @return the numberOfViews
      */
-    public int getNoTimesViewed() {
-        return noTimesViewed;
+    public int getNumberOfViews() {
+        return numberOfViews;
     }
 
     /**
-     * @param noTimesViewed the noTimesViewed to set
+     * @param numberOfViews the numberOfViews to set
      */
-    public void setNoTimesViewed(int noTimesViewed) {
-        this.noTimesViewed = noTimesViewed;
+    public void setNumberOfViews(int numberOfViews) {
+        this.numberOfViews = numberOfViews;
     }
 
     /**
-     * @return the noTimesDown
+     * @return the downloadsCount
      */
-    public int getNoTimesDown() {
-        return noTimesDown;
+    public int getDownloadsCount() {
+        return downloadsCount;
     }
 
     /**
-     * @param noTimesDown the noTimesDown to set
+     * @param downloadsCount the downloadsCount to set
      */
-    public void setNoTimesDown(int noTimesDown) {
-        this.noTimesDown = noTimesDown;
+    public void setDownloadsCount(int downloadsCount) {
+        this.downloadsCount = downloadsCount;
     }
-
     
     
 }
