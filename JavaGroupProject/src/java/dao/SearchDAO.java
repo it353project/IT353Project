@@ -8,11 +8,14 @@ package dao;
 
 import java.util.ArrayList;
 import model.SearchBean;
+import model.ViewBean;
 
 /**
  *
  * @author it3530219
  */
 public interface SearchDAO {
-    public ArrayList searchRequest(SearchBean aSearch);     
+    public ArrayList searchRequest(SearchBean aSearch);    
+    public ViewBean detailsRequest(int thesisID);
+    public ArrayList findSimilar(ViewBean aView);
 }
