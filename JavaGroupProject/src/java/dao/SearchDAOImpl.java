@@ -148,7 +148,9 @@ public class SearchDAOImpl implements SearchDAO {
             clauseCounter++;            
         }
         
-        query = baseSelect + fromClause + joinClause + whereClause;
+        String orderByClause = "ORDER BY IT353.THESIS.THESISID ASC";
+        
+        query = baseSelect + fromClause + joinClause + whereClause + orderByClause;
         /* Pass the now-built query on to the database. */
         ArrayList searchResults = performSearch(query);
         
@@ -169,7 +171,7 @@ public class SearchDAOImpl implements SearchDAO {
         try {         
             String myDB = "jdbc:derby://localhost:1527/IT353";  
             Connection DBConn = DriverManager.getConnection(myDB, "itkstu", "student");
-            Statement stmt = DBConn.createStatement();
+            Statement stmt = DBConn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
             ResultSet rs = stmt.executeQuery(query);
             DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
             ViewBean aView;
@@ -203,11 +205,12 @@ public class SearchDAOImpl implements SearchDAO {
                     aView.setScreencastLink(rs.getString("SCREENCASTLINK"));
                     aView.setLiveLink(rs.getString("LIVELINK"));
                     aView.setUploadDate(df.format(rs.getDate("UPLOADDATE"))); 
+                    int nextThesisID = 0;
                     
-                    /* advance the cursor by one to peek at the next row */
-                    while(nextCounter == 0){
-                        while(rs.next()){
-                            if (thesisID == Integer.parseInt(rs.getString("THESISID"))){
+                    /* advance the cursor by one to peek at the next row */               
+                        while(rs.next() && nextCounter == 0){
+                            nextThesisID = Integer.parseInt(rs.getString("THESISID"));
+                            if (thesisID == nextThesisID){
                                 keywordCounter++;
                             keywords[keywordCounter] = rs.getString("KEYWORD");
                             }else{
@@ -216,9 +219,11 @@ public class SearchDAOImpl implements SearchDAO {
                             if(!rs.next()){
                                 nextCounter = 1;
                                 EOF = true;
+                            }else{
+                                rs.previous();
                             }
                         }
-                    }
+
                     if(!EOF){
                         rs.previous();
                     }
@@ -257,7 +262,8 @@ public class SearchDAOImpl implements SearchDAO {
             "JOIN IT353.KEYASSIGN ON IT353.KEYASSIGN.THESISID = IT353.THESIS.THESISID " +
             "JOIN IT353.KEYWORD ON IT353.KEYWORD.KEYWORDID = IT353.KEYASSIGN.KEYWORDID ";
         String whereClause = "WHERE IT353.THESIS.THESISID = " + thesisID;
-        String query = baseSelect + fromClause + joinClause + whereClause;
+        String orderByClause = "ORDER BY IT353.THESIS.THESISID ASC";
+        String query = baseSelect + fromClause + joinClause + whereClause + orderByClause;
         ViewBean aView = performDetailSearch(query);
        
         return aView;
@@ -290,11 +296,11 @@ public class SearchDAOImpl implements SearchDAO {
                     keywords = keywords + "'" + aView.getKeywords()[i] + "',";
                 }        
             }
-            keywords = "IT353.KEYWORD.KEYWORD IN (" + keywords + ")";
         }
 
-        String whereClause = "WHERE IT353.KEYWORD.KEYWORD IN (" + keywords + ")";;
-        String query = baseSelect + fromClause + joinClause + whereClause;
+        String whereClause = "WHERE IT353.KEYWORD.KEYWORD IN (" + keywords + ")";
+        String orderByClause = "ORDER BY IT353.THESIS.THESISID ASC";
+        String query = baseSelect + fromClause + joinClause + whereClause + orderByClause;
         ArrayList searchResults = performSearch(query);
         return searchResults;
     }
