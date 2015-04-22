@@ -12,9 +12,11 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import model.SearchBean;
+import model.ViewBean;
 
 /**
  *
@@ -25,14 +27,17 @@ import model.SearchBean;
 public class SearchController {
     
     private SearchBean theModel;
+    private ViewBean finalSelection;
     private String authorName;
     private String courseID;
     private String keywords;
     private Date startDate;
     private Date endDate;
+    private List searchList;
     
     public SearchController() {
         theModel = new SearchBean();
+        finalSelection = new ViewBean();
     }
     
     public SearchBean getTheModel() {
@@ -42,9 +47,8 @@ public class SearchController {
     public void setTheModel(SearchBean theModel) {
         this.theModel = theModel;
     }
-    
-   
-    public void performSearch(){
+       
+    public String performSearch(){
         authorName = theModel.getAuthorName();
         courseID = theModel.getCourseNo();
         keywords = theModel.getKeywords();
@@ -85,10 +89,63 @@ public class SearchController {
                 validationFlag++;
             }
         }
-        /* Perform search and stores the resultset in the bean. */
-        SearchDAO searchDAO = new SearchDAOImpl();
-        theModel.setResults(searchDAO.searchRequest(theModel));
+        /* Perform search and stores the resultset in the bean if valid. */
+        if (validationFlag == 0){
+            SearchDAO searchDAO = new SearchDAOImpl();
+            theModel.setResults(searchDAO.searchRequest(theModel));
+        }else{
+            /* Or nothing, invalid search terms */
+        }
         
-        /* Direct the page to the resultsPage screen. */
+        /* Direct the page to the resultsPage screen if valid */
+        if (!theModel.getResults().isEmpty()) {
+            searchList = theModel.getResults();
+            return "searchResult.xhtml";
+        } else {
+            return null;
+        }
+            
+    }
+    
+    public String getDetails(int thesisID){
+        /* set the view */
+        SearchDAO searchDAO = new SearchDAOImpl();
+        finalSelection = searchDAO.detailsRequest(thesisID);
+
+        return "viewDetails.xhtml";
+    }
+
+    public String showSimilar(){
+        SearchDAO searchDAO = new SearchDAOImpl();
+        theModel.setResults(searchDAO.findSimilar(finalSelection));
+        return "searchResult.xhtml";
+    }
+    
+    /**
+     * @return the theResult
+     */
+    public ViewBean getFinalSelection() {
+        return finalSelection;
+    }
+
+    /**
+     * @param theResult the theResult to set
+     */
+    public void setFinalSelection(ViewBean finalSelection) {
+        this.finalSelection = finalSelection;
+    }
+
+    /**
+     * @return the searchList
+     */
+    public List getSearchList() {
+        return searchList;
+    }
+
+    /**
+     * @param searchList the searchList to set
+     */
+    public void setSearchList(List searchList) {
+        this.searchList = searchList;
     }
 }
