@@ -11,10 +11,9 @@ package model;
  * @author it3530229
  */
 public class ViewBean {
-    private int thesisID;
-    private String thesisName;
+    private String thesisID;
     private String authorName;
-    private String courseNo;
+    private String courseID;
     private String[] keywords;
     private String abstractCLOB;
     private String attachmentLink;
@@ -25,14 +24,14 @@ public class ViewBean {
     /**
      * @return the thesisID
      */
-    public int getThesisID() {
+    public String getThesisID() {
         return thesisID;
     }
 
     /**
      * @param thesisID the thesisID to set
      */
-    public void setThesisID(int thesisID) {
+    public void setThesisID(String thesisID) {
         this.thesisID = thesisID;
     }
 
@@ -53,15 +52,15 @@ public class ViewBean {
     /**
      * @return the courseID
      */
-    public String getCourseNo() {
-        return courseNo;
+    public String getCourseID() {
+        return courseID;
     }
 
     /**
      * @param courseID the courseID to set
      */
-    public void setCourseNo(String courseNo) {
-        this.courseNo = courseNo;
+    public void setCourseID(String courseID) {
+        this.courseID = courseID;
     }
 
     /**
@@ -69,24 +68,6 @@ public class ViewBean {
      */
     public String[] getKeywords() {
         return keywords;
-    }
-    
-    public String getKeywordString() {
-        String keywordString = "";
-            for(int i = 0; i < keywords.length; i++){
-                
-                if (keywords.length == 1){
-                    keywordString = keywords[i];
-                }else{
-                    if(i == keywords.length - 1){
-                        keywordString = keywordString + keywords[i];
-                    }else{
-                        keywordString = keywordString + keywords[i] + ", ";
-                    }
-                }
-            }
-        
-        return keywordString;
     }
 
     /**
@@ -164,20 +145,6 @@ public class ViewBean {
      */
     public void setUploadDate(String uploadDate) {
         this.uploadDate = uploadDate;
-    }
-
-    /**
-     * @return the thesisName
-     */
-    public String getThesisName() {
-        return thesisName;
-    }
-
-    /**
-     * @param thesisName the thesisName to set
-     */
-    public void setThesisName(String thesisName) {
-        this.thesisName = thesisName;
     }
 
 
