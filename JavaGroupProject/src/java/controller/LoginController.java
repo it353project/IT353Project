@@ -103,7 +103,7 @@ public class LoginController {
             int rowCount = aLoginDAO.findAccount(theModel); // Doing anything with the object after this?
             if (rowCount >= 1) //a user with approved account found
             {
-                theModel.setIsLoggedIn("LoggedIn");
+                theModel.setIsLoggedIn(true);
                 attemptCount = 0;
                 String accountType = aLoginDAO.findUserAccountType(theModel);
                 if (accountType.equals("admin")) //the user is an admin
@@ -116,7 +116,7 @@ public class LoginController {
 
             } else //a user may be either in pending status or gave incorrect username/pwd
             {
-                theModel.setIsLoggedIn("NotLoggedIn");
+                theModel.setIsLoggedIn(false);
                 int pendingRowCount = aLoginDAO.findPendingAccount(theModel);
                 if (pendingRowCount >= 1) //the user account in pending status
                 {
@@ -138,7 +138,7 @@ public class LoginController {
 
     public String logout() {
 //        loggedIn = false;
-        theModel.setIsLoggedIn("NotLoggedIn");
+        theModel.setIsLoggedIn(false);
         theModel.setUserName("");
         theModel.setPassword("");
         return "login.xhtml";

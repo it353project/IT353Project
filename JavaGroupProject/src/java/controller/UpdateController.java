@@ -29,7 +29,7 @@ public class UpdateController {
     
     public UpdateController() {
         theModel = new UserBean();
-        theModel.setIsLoggedIn("NotLoggedIn");
+        theModel.setIsLoggedIn(false);
     }
     
     public UserBean getTheModel() {
@@ -54,12 +54,12 @@ public class UpdateController {
         theModel = (UserBean) result.get(0);
         if (theModel != null) 
         {
-            theModel.setIsLoggedIn("LoggedIn");
+            theModel.setIsLoggedIn(true);
             return "update.xhtml";
         }
         else
         {
-            theModel.setIsLoggedIn("NotLoggedIn");
+            theModel.setIsLoggedIn(false);
             return "error.xhtml";
         }
     }
@@ -125,7 +125,7 @@ public class UpdateController {
     public String isLoggedInCheck(ComponentSystemEvent event) {
         String navi = null;
 
-        if (!theModel.getIsLoggedIn().equals("LoggedIn")) {
+        if (!theModel.getIsLoggedIn()) {
 
             FacesContext fc = FacesContext.getCurrentInstance();
             ConfigurableNavigationHandler nav = (ConfigurableNavigationHandler) fc.getApplication().getNavigationHandler();
