@@ -169,7 +169,7 @@ public class SearchDAOImpl implements SearchDAO {
         }
         
         try {         
-            String myDB = "jdbc:derby://localhost:1527/IT353";  
+            String myDB = "jdbc:derby://localhost:1527/Project353";  
             Connection DBConn = DriverManager.getConnection(myDB, "itkstu", "student");
             Statement stmt = DBConn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
             ResultSet rs = stmt.executeQuery(query);
@@ -315,7 +315,7 @@ public class SearchDAOImpl implements SearchDAO {
         }
         
         try {         
-            String myDB = "jdbc:derby://localhost:1527/IT353";  
+            String myDB = "jdbc:derby://localhost:1527/Project353";  
             Connection DBConn = DriverManager.getConnection(myDB, "itkstu", "student");
             Statement stmt = DBConn.createStatement();
             ResultSet rs = stmt.executeQuery(query);
