@@ -29,15 +29,23 @@
             <ui:insert name="bottom"><right>Copyright 2015</right></ui:insert>
         </div>
 
-        <c:if test="#{UserBean.isLoggedIn=='true'}">
+        <c:if test="#{loginController.theModel.accountType=='student'}">
 
             <p:dock position="bottom">
                 <p:menuitem value="Upload Thesis" icon="/resources/demo/images/dock/home.png" url="uploadThesis.xhtml"/>
-
             </p:dock>
 
         </c:if>
-        <c:if test="#{UserBean.isLoggedIn=='false'}">
+        
+        <c:if test="#{loginController.theModel.accountType=='admin'}">
+
+            <p:dock position="bottom">
+                <p:menuitem value="Upload Thesis" icon="/resources/demo/images/dock/home.png" url="uploadThesis.xhtml"/>
+            </p:dock>
+
+        </c:if>
+        
+        <c:if test="#{loginController.theModel.isLoggedIn=='false'}">
 
             <p:dock position="bottom">
                 <p:menuitem value="Log In" icon="/resources/logIn.png" url="login.xhtml"/>
@@ -47,13 +55,7 @@
 
         </c:if>
 
-        <p:dock position="bottom">
-            <p:menuitem value="Log In" icon="/resources/logIn.png" url="login.xhtml"/>
-            <p:menuitem value="Sign Up" icon="/resources/signUp.png" url="signUpPage1.xhtml"/>
-            <p:menuitem value="Recover Password" icon="/resources/recoverPassword.png" url="lostPassword.xhtml"/>
-        </p:dock>   
-
-
+       
     </h:body>
 
 </html>
