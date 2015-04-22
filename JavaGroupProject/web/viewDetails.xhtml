@@ -9,6 +9,7 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <h:outputStylesheet name="./css/default.css"/>
         <h:outputStylesheet name="./css/cssLayout.css"/>
+        <h:outputStylesheet name="./css/style.css"/>
         <title>Master Template</title>
     </h:head>
 
@@ -22,7 +23,18 @@
 
         <div id="content" class="center_content">
             <ui:insert name="content">
-                <div id=""></div>
+                <div id="login" class="coreDiv">
+                    <h:outputText id="authorName" escape="false" value="#{searchController.finalSelection.authorName}" /><br/>
+                    <h:outputText id="thesisName" escape="false" value="#{searchController.finalSelection.thesisName}" /><br/>
+                    <h:outputText id="courseNo" escape="false" value="#{searchController.finalSelection.courseNo}" /><br/>
+                    <h:outputText id="keywordString" escape="false" value="#{searchController.finalSelection.keywordString}" /><br/>
+                    <h:outputText id="abstractCLOB" escape="false" value="#{searchController.finalSelection.abstractCLOB}" /><br/>
+                    <h:outputText id="attachmentLink" escape="false" value="#{searchController.finalSelection.attachmentLink}" /><br/>
+                    <h:outputText id="screencastLink" escape="false" value="#{searchController.finalSelection.screencastLink}" /><br/>
+                    <h:outputText id="liveLink" escape="false" value="#{searchController.finalSelection.liveLink}" /><br/>
+                    <h:outputText id="uploadDate" escape="false" value="#{searchController.finalSelection.uploadDate}" /><br/>
+                    <h:commandButton id="showSimilar" value="Show Similar" action="#{searchController.showSimilar()}" />
+                </div>
             </ui:insert>
         </div>
 
