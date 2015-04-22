@@ -5,15 +5,16 @@
  */
 package dao;
 
-import controller.SearchController;
+import java.sql.Clob;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import model.SearchBean;
+import model.ViewBean;
 
 /**
  *
@@ -85,8 +86,17 @@ public class SearchDAOImpl implements SearchDAO {
         }
           
         /* Build the basic template for */
-        String baseSelect = "SELECT DISTINCT IT353.ACCOUNT.FIRSTNAME || ' ' || IT353.ACCOUNT.LASTNAME AS AUTHORNAME, IT353.THESIS.THESISNAME,"
-                + " IT353.THESIS.UPLOADDATE ";
+        String baseSelect = "SELECT"
+                + " IT353.ACCOUNT.FIRSTNAME || ' ' || IT353.ACCOUNT.LASTNAME AS AUTHORNAME,"
+                + " IT353.THESIS.THESISID, "
+                + " IT353.THESIS.THESISNAME, "
+                + " IT353.THESIS.COURSENO, "
+                + " IT353.THESIS.ABSTRACT, "
+                + " IT353.THESIS.ATTACHMENTLINK, "
+                + " IT353.THESIS.SCREENCASTLINK, "
+                + " IT353.THESIS.LIVELINK, "
+                + " IT353.THESIS.UPLOADDATE, "
+                + " IT353.KEYWORD.KEYWORD ";
         String fromClause = "FROM IT353.ACCOUNT ";
         String joinClause = "JOIN IT353.THESIS ON IT353.THESIS.ACCOUNTID = IT353.ACCOUNT.ACCOUNTID " +
             "JOIN IT353.KEYASSIGN ON IT353.KEYASSIGN.THESISID = IT353.THESIS.THESISID " +
@@ -147,8 +157,150 @@ public class SearchDAOImpl implements SearchDAO {
     }
 
     public ArrayList performSearch(String query){
-        ArrayList<String> searchResult = new ArrayList<String>(); 
+            ArrayList viewCollection = new ArrayList(); 
+
+           try {
+            Class.forName("org.apache.derby.jdbc.ClientDriver");
+        } catch (ClassNotFoundException e) {
+            System.err.println(e.getMessage());
+            System.exit(0);
+        }
+        
+        try {         
+            String myDB = "jdbc:derby://localhost:1527/IT353";  
+            Connection DBConn = DriverManager.getConnection(myDB, "itkstu", "student");
+            Statement stmt = DBConn.createStatement();
+            ResultSet rs = stmt.executeQuery(query);
+            DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
+            ViewBean aView;
+            String[] keywords = new String[20];
+            int nextCounter = 0;
+            Boolean EOF = false;
+            int keywordCounter = 0;
+            
+            int thesisID = 0;
+
+            
+            while (rs.next()) {
+                aView = new ViewBean();
+                    keywordCounter = 0;
+                    nextCounter = 0;
+                    
+                    thesisID = Integer.parseInt(rs.getString("THESISID"));
+                    aView.setThesisID(Integer.parseInt(rs.getString("THESISID")));
+                    aView.setThesisName(rs.getString("THESISNAME"));
+                    aView.setAuthorName(rs.getString("AUTHORNAME"));
+                    aView.setCourseNo(rs.getString("COURSENO"));
+
+                    keywords[keywordCounter] = rs.getString("KEYWORD");
+
+                    aView.setKeywords(keywords);
+                    Clob clob = rs.getClob("ABSTRACT");
+                    if (clob != null) {  
+                        aView.setAbstractCLOB(clob.getSubString(1, (int) clob.length()));
+                    }
+                    aView.setAttachmentLink(rs.getString("ATTACHMENTLINK"));
+                    aView.setScreencastLink(rs.getString("SCREENCASTLINK"));
+                    aView.setLiveLink(rs.getString("LIVELINK"));
+                    aView.setUploadDate(df.format(rs.getDate("UPLOADDATE"))); 
+                    
+                    /* advance the cursor by one to peek at the next row */
+                    while(nextCounter == 0){
+                        while(rs.next()){
+                            if (thesisID == Integer.parseInt(rs.getString("THESISID"))){
+                                keywordCounter++;
+                            keywords[keywordCounter] = rs.getString("KEYWORD");
+                            }else{
+                                nextCounter = 1;
+                            }
+                            if(!rs.next()){
+                                nextCounter = 1;
+                                EOF = true;
+                            }
+                        }
+                    }
+                    if(!EOF){
+                        rs.previous();
+                    }
+
+
+
+                                 
+                viewCollection.add(aView);
+            }
+            
+            rs.close();
+            stmt.close();
+            DBConn.close();
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+            e.printStackTrace();
+        }
+                   
+        return viewCollection;
+    }
+
+    public ViewBean detailsRequest(int thesisID){
+        String baseSelect = "SELECT"
+                + " IT353.ACCOUNT.FIRSTNAME || ' ' || IT353.ACCOUNT.LASTNAME AS AUTHORNAME,"
+                + " IT353.THESIS.THESISID, "
+                + " IT353.THESIS.THESISNAME, "
+                + " IT353.THESIS.COURSENO, "
+                + " IT353.THESIS.ABSTRACT, "
+                + " IT353.THESIS.ATTACHMENTLINK, "
+                + " IT353.THESIS.SCREENCASTLINK, "
+                + " IT353.THESIS.LIVELINK, "
+                + " IT353.THESIS.UPLOADDATE, "
+                + " IT353.KEYWORD.KEYWORD ";
+        String fromClause = "FROM IT353.ACCOUNT ";
+        String joinClause = "JOIN IT353.THESIS ON IT353.THESIS.ACCOUNTID = IT353.ACCOUNT.ACCOUNTID " +
+            "JOIN IT353.KEYASSIGN ON IT353.KEYASSIGN.THESISID = IT353.THESIS.THESISID " +
+            "JOIN IT353.KEYWORD ON IT353.KEYWORD.KEYWORDID = IT353.KEYASSIGN.KEYWORDID ";
+        String whereClause = "WHERE IT353.THESIS.THESISID = " + thesisID;
+        String query = baseSelect + fromClause + joinClause + whereClause;
+        ViewBean aView = performDetailSearch(query);
+       
+        return aView;
+    }
+    
+    public ArrayList findSimilar(ViewBean aView){
+        String baseSelect = "SELECT"
+                + " IT353.ACCOUNT.FIRSTNAME || ' ' || IT353.ACCOUNT.LASTNAME AS AUTHORNAME,"
+                + " IT353.THESIS.THESISID, "
+                + " IT353.THESIS.THESISNAME, "
+                + " IT353.THESIS.COURSENO, "
+                + " IT353.THESIS.ABSTRACT, "
+                + " IT353.THESIS.ATTACHMENTLINK, "
+                + " IT353.THESIS.SCREENCASTLINK, "
+                + " IT353.THESIS.LIVELINK, "
+                + " IT353.THESIS.UPLOADDATE, "
+                + " IT353.KEYWORD.KEYWORD ";
+        String fromClause = "FROM IT353.ACCOUNT ";
+        String joinClause = "JOIN IT353.THESIS ON IT353.THESIS.ACCOUNTID = IT353.ACCOUNT.ACCOUNTID " +
+            "JOIN IT353.KEYASSIGN ON IT353.KEYASSIGN.THESISID = IT353.THESIS.THESISID " +
+            "JOIN IT353.KEYWORD ON IT353.KEYWORD.KEYWORDID = IT353.KEYASSIGN.KEYWORDID ";
            
+        String keywords = "";
+        if(aView.getKeywords().length != 0){
+            for(int i=0; i < aView.getKeywords().length; i++){
+                if (i == aView.getKeywords().length-1){
+                    /* If it's the last one, no comma at end. */
+                    keywords = keywords + "'" + aView.getKeywords()[i] + "'";
+                }else{
+                    keywords = keywords + "'" + aView.getKeywords()[i] + "',";
+                }        
+            }
+            keywords = "IT353.KEYWORD.KEYWORD IN (" + keywords + ")";
+        }
+
+        String whereClause = "WHERE IT353.KEYWORD.KEYWORD IN (" + keywords + ")";;
+        String query = baseSelect + fromClause + joinClause + whereClause;
+        ArrayList searchResults = performSearch(query);
+        return searchResults;
+    }
+    
+    public ViewBean performDetailSearch(String query){
+        ViewBean aView = new ViewBean();
         try {
             Class.forName("org.apache.derby.jdbc.ClientDriver");
         } catch (ClassNotFoundException e) {
@@ -161,18 +313,56 @@ public class SearchDAOImpl implements SearchDAO {
             Connection DBConn = DriverManager.getConnection(myDB, "itkstu", "student");
             Statement stmt = DBConn.createStatement();
             ResultSet rs = stmt.executeQuery(query);
+            DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
+            String[] keywords = new String[20];
+            int nextCounter = 0;
+            Boolean EOF = false;
+            int keywordCounter = 0;
             
-            ResultSetMetaData metadata = rs.getMetaData();
-            int noOfColumns = metadata.getColumnCount();
+            int thesisID = 0;
 
-            while (rs.next()) {              
-                int i = 1;
-                while(i <= noOfColumns) {
-                    searchResult.add(rs.getString(i++));
-                }
-                    System.out.println(rs.getString("AUTHORNAME"));
-                    System.out.println(rs.getString("THESISNAME"));
-                    System.out.println(rs.getString("UPLOADDATE"));                    
+            
+            while (rs.next()) {
+                
+                    keywordCounter = 0;
+                    nextCounter = 0;
+                    
+                    thesisID = Integer.parseInt(rs.getString("THESISID"));
+                    aView.setThesisID(Integer.parseInt(rs.getString("THESISID")));
+                    aView.setThesisName(rs.getString("THESISNAME"));
+                    aView.setAuthorName(rs.getString("AUTHORNAME"));
+                    aView.setCourseNo(rs.getString("COURSENO"));
+
+                    keywords[keywordCounter] = rs.getString("KEYWORD");
+
+                    aView.setKeywords(keywords);
+                    Clob clob = rs.getClob("ABSTRACT");
+                    if (clob != null) {  
+                        aView.setAbstractCLOB(clob.getSubString(1, (int) clob.length()));
+                    }
+                    aView.setAttachmentLink(rs.getString("ATTACHMENTLINK"));
+                    aView.setScreencastLink(rs.getString("SCREENCASTLINK"));
+                    aView.setLiveLink(rs.getString("LIVELINK"));
+                    aView.setUploadDate(df.format(rs.getDate("UPLOADDATE"))); 
+                    
+                    /* advance the cursor by one to peek at the next row */
+                    while(nextCounter == 0){
+                        while(rs.next()){
+                            if (thesisID == Integer.parseInt(rs.getString("THESISID"))){
+                                keywordCounter++;
+                            keywords[keywordCounter] = rs.getString("KEYWORD");
+                            }else{
+                                nextCounter = 1;
+                            }
+                            if(!rs.next()){
+                                nextCounter = 1;
+                                EOF = true;
+                            }
+                        }
+                    }
+                    if(!EOF){
+                        rs.previous();
+                    }
             }
             
             rs.close();
@@ -183,7 +373,7 @@ public class SearchDAOImpl implements SearchDAO {
             e.printStackTrace();
         }
                    
-        return searchResult;
+        return aView;
     }
-
+    
 }
