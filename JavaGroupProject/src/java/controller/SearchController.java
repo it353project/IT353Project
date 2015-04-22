@@ -118,6 +118,7 @@ public class SearchController {
     public String showSimilar(){
         SearchDAO searchDAO = new SearchDAOImpl();
         theModel.setResults(searchDAO.findSimilar(finalSelection));
+        searchList = theModel.getResults();
         return "searchResult.xhtml";
     }
     
