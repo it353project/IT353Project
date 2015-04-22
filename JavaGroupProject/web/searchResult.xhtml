@@ -25,27 +25,39 @@
             <ui:insert name="content">
                 <br/><br/><center><h2>Search Results</h2></center>
                 <div id="login" class="coreDiv">
-                    <h:form id="searchResultForm" style="">
-                        <p:dataTable id="singleDT" var="car" value="#{searchController.theModel.results}" selectionMode="single" selection="" rowKey="">
-                        <f:facet name="header">
-                            Single with Row Click
-                        </f:facet>
-                        <p:column headerText="Author">
-                            <h:outputText value="Author" />
+                    <h:form>
+                        <p:dataTable id="voteTallyTableID3" value="#{searchController.searchList}" var="aRow">
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="Thesis ID"/>
+                                </f:facet>
+                                <h:outputText value="#{aRow.thesisID}"/>
+                            </p:column>
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="Author Name"/>
+                                </f:facet>
+                                <h:outputText value="#{aRow.authorName}"/>
+                            </p:column>
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="Thesis Name"/>
+                                </f:facet>
+                                <h:outputText value="#{aRow.thesisName}"/>
+                            </p:column>
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="Upload Date"/>
+                                </f:facet>
+                                <h:outputText value="#{aRow.uploadDate}"/>
+                            </p:column>
+                            <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="Details"/>
+                            </f:facet>
+                            <h:commandLink value="View" action="#{searchController.getDetails(aRow.thesisID)}"></h:commandLink>
                         </p:column>
-                        <p:column headerText="Course No.">
-                            <h:outputText value="Course No." />
-                        </p:column>
-                        <p:column headerText="Keywords">
-                            <h:outputText value="Keywords" />
-                        </p:column>
-                        <p:column headerText="Date">
-                            <h:outputText value="Date" />
-                        </p:column>
-                        <f:facet name="footer">
-                            <p:commandButton process="singleDT" update=":form:carDetail" icon="ui-icon-search" value="View" oncomplete="PF('carDialog').show()" />
-                        </f:facet>
-                    </p:dataTable>
+                        </p:dataTable>
                     </h:form>
                 </div>
             </ui:insert>
