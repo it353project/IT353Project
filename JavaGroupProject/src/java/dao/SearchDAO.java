@@ -8,6 +8,7 @@ package dao;
 
 import java.util.ArrayList;
 import model.SearchBean;
+import model.ViewBean;
 
 /**
  *
@@ -15,4 +16,6 @@ import model.SearchBean;
  */
 public interface SearchDAO {
     public ArrayList searchRequest(SearchBean aSearch);     
+    public ViewBean detailsRequest(int thesisID);
+    public ArrayList findSimilar(ViewBean aView);
 }
