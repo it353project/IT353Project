@@ -6,26 +6,21 @@
 
 package model;
 
-import java.util.Date;
-
 /**
  *
  * @author it3530229
  */
-public class ThesisBean {
+public class ViewBean {
     private int thesisID;
-    private int accountID;
     private String thesisName;
-    private String semesterName;
-    private String courseID;
-    private String committeeID;
+    private String authorName;
+    private String courseNo;
+    private String[] keywords;
     private String abstractCLOB;
     private String attachmentLink;
     private String screencastLink;
     private String liveLink;
     private String uploadDate;
-    private int noTimesViewed;
-    private int noTimesDown;
 
     /**
      * @return the thesisID
@@ -42,73 +37,63 @@ public class ThesisBean {
     }
 
     /**
-     * @return the accountID
+     * @return the authorName
      */
-    public int getAccountID() {
-        return accountID;
+    public String getAuthorName() {
+        return authorName;
     }
 
     /**
-     * @param accountID the accountID to set
+     * @param authorName the authorName to set
      */
-    public void setAccountID(int accountID) {
-        this.accountID = accountID;
-    }
-
-    /**
-     * @return the thesisName
-     */
-    public String getThesisName() {
-        return thesisName;
-    }
-
-    /**
-     * @param thesisName the thesisName to set
-     */
-    public void setThesisName(String thesisName) {
-        this.thesisName = thesisName;
-    }
-
-    /**
-     * @return the semesterName
-     */
-    public String getSemesterName() {
-        return semesterName;
-    }
-
-    /**
-     * @param semesterName the semesterName to set
-     */
-    public void setSemesterName(String semesterName) {
-        this.semesterName = semesterName;
+    public void setAuthorName(String authorName) {
+        this.authorName = authorName;
     }
 
     /**
      * @return the courseID
      */
-    public String getCourseID() {
-        return courseID;
+    public String getCourseNo() {
+        return courseNo;
     }
 
     /**
      * @param courseID the courseID to set
      */
-    public void setCourseID(String courseID) {
-        this.courseID = courseID;
+    public void setCourseNo(String courseNo) {
+        this.courseNo = courseNo;
     }
 
     /**
-     * @return the committeeID
+     * @return the keywords
      */
-    public String getCommitteeID() {
-        return committeeID;
+    public String[] getKeywords() {
+        return keywords;
+    }
+    
+public String getKeywordString() {
+        String keywordString = "";
+            for(int i = 0; i < keywords.length; i++){
+                
+                if (keywords.length == 1){
+                    keywordString = keywords[i];
+                }else{
+                    if(i == keywords.length - 1){
+                        keywordString = keywordString + keywords[i];
+                    }else{
+                        keywordString = keywordString + keywords[i] + ", ";
+                    }
+                }
+            }
+        
+        return keywordString;
     }
 
     /**
-     * @param committeeID the committeeID to set
+     * @param keywords the keywords to set
      */
-    public void setCommitteeID(String committeeID) {
-        this.committeeID = committeeID;
+    public void setKeywords(String[] keywords) {
+        this.keywords = keywords;
     }
 
     /**
@@ -182,32 +167,19 @@ public class ThesisBean {
     }
 
     /**
-     * @return the noTimesViewed
+     * @return the thesisName
      */
-    public int getNoTimesViewed() {
-        return noTimesViewed;
+    public String getThesisName() {
+        return thesisName;
     }
 
     /**
-     * @param noTimesViewed the noTimesViewed to set
+     * @param thesisName the thesisName to set
      */
-    public void setNoTimesViewed(int noTimesViewed) {
-        this.noTimesViewed = noTimesViewed;
+    public void setThesisName(String thesisName) {
+        this.thesisName = thesisName;
     }
 
-    /**
-     * @return the noTimesDown
-     */
-    public int getNoTimesDown() {
-        return noTimesDown;
-    }
-
-    /**
-     * @param noTimesDown the noTimesDown to set
-     */
-    public void setNoTimesDown(int noTimesDown) {
-        this.noTimesDown = noTimesDown;
-    }
 
     
     
