@@ -10,6 +10,12 @@
     </h:head>
     <h:body>
         <ui:composition template="masterTemplate.xhtml">
+            <ui:define name="top_link">
+                <div align="right">
+                <h:link value="Log In" outcome="login.xhtml"/> |
+                <h:link value="Create Account" outcome="signUpPage1.xhtml"/>
+                </div>
+            </ui:define>
             <ui:define name="content">
                 <br/><br/><center><h2>Create new Account</h2></center>
                 <div id="login" style ="width:400px; height:360px; margin: 0 auto; margin-top: 50px; margin-bottom: 50px; border: 1px solid #000; background-color: #EAEBD8">

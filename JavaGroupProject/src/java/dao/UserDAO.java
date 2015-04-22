@@ -19,6 +19,7 @@ public interface UserDAO {
     
     public int findAccount(UserBean aSignUp);
     public int findPendingAccount(UserBean aLogin);
+    public int findDeniedAccount(UserBean aLogin);
     public String findUserAccountType(UserBean aLogin);
     
     public String retrievePassword(String userName);

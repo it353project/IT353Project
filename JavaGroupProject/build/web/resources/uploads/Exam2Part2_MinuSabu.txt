@@ -1,0 +1,392 @@
+> --Qn1
+> WITH spaces_count AS
+  (SELECT vendor_name, 
+     LENGTH(vendor_name)-LENGTH(REPLACE(vendor_name, ' ', NULL)) AS number_of_spaces
+   FROM vendors)
+SELECT 
+    CASE spaces_count.number_of_spaces 
+        WHEN 0 THEN substr(v.vendor_name,instr(v.vendor_name, ' ', -1, 1) + 1, 1) 
+        
+        WHEN 1 THEN substr(v.vendor_name,instr(v.vendor_name, ' ', -1, 2) + 1, 1) || 
+                    substr(v.vendor_name,instr(v.vendor_name, ' ', -1, 1 )+ 1, 1)
+        
+        WHEN 2 THEN substr(v.vendor_name,instr(v.vendor_name, ' ', -1, 3) + 1, 1) || 
+                    substr(v.vendor_name,instr(v.vendor_name, ' ', -1, 2) + 1, 1) || 
+                    substr(v.vendor_name,instr(v.vendor_name, ' ', -1, 1) + 1, 1)
+       
+        WHEN 3 THEN substr(v.vendor_name,instr(v.vendor_name, ' ', -1, 4) + 1, 1) || 
+                    substr(v.vendor_name,instr(v.vendor_name, ' ', -1, 3) + 1, 1) || 
+                    substr(v.vendor_name,instr(v.vendor_name, ' ', -1, 2) + 1, 1) || 
+                    substr(v.vendor_name,instr(v.vendor_name, ' ', -1, 1) + 1, 1)
+       
+        WHEN 4 THEN substr(v.vendor_name,instr(v.vendor_name, ' ', -1, 5) + 1, 1) || 
+                    substr(v.vendor_name,instr(v.vendor_name, ' ', -1, 4) + 1, 1) || 
+                    substr(v.vendor_name,instr(v.vendor_name, ' ', -1, 3) + 1, 1) || 
+                    substr(v.vendor_name,instr(v.vendor_name, ' ', -1, 2) + 1, 1) ||
+                    substr(v.vendor_name,instr(v.vendor_name, ' ', -1, 1) + 1, 1)
+    
+    END AS initials, SUBSTR(vendor_contact_first_name, 1, 1) || ' ' || vendor_contact_last_name AS vendor_contact
+  FROM vendors v JOIN spaces_count 
+    ON spaces_count.vendor_name=v.vendor_name
+  WHERE vendor_id IN(SELECT DISTINCT vendor_id FROM invoices);
+
+
+INITIALS VENDOR_CONTACT                                     
+-------- ----------------------------------------------------
+I        T Camron                                             
+BC       N Eliana                                             
+FCTC     K Brenton                                            
+DRC      C Arodondo                                           
+CBMI     K Eulalia                                            
+WLI      R Kapil                                              
+RS&PB    C Rodolfo                                            
+I        T Yobani                                             
+C        A Lloyd                                              
+EDS      J Helena                                             
+EEI      H Royce                                              
+WC       N Rothman                                            
+AOF      K Francis                                            
+PB       K Nickalus                                           
+WFB      M Damion                                             
+C        J Armando                                            
+BISI     L Potter                                             
+CPC      S Jacobsen                                           
+CBS      J Smitzen                                            
+DWR      V Johnson                                            
+DD       R Elmert                                             
+DG&M     T Aaronsen                                           
+FMCC     K Snyder                                             
+FTB      A Prado                                              
+GGB      W Bragg                                              
+MLI      A Regging                                            
+P        R Aranovitch                                         
+P        F Finklestein                                        
+RPSI     S Smith                                              
+SP       H Spivak                                             
+YI       R Hernandez                                          
+ZD       J Ronaldsen                                          
+UPS      V Beauregard                                         
+FEC      C Bucket                                             
+
+
+ 34 rows selected 
+
+
+
+> --Qn2
+
+> WITH vendor_rank AS(
+  SELECT v.vendor_name, 
+    i.invoice_total, 
+    DENSE_RANK() OVER (ORDER BY i.invoice_total DESC) AS rank 
+  FROM vendors v JOIN invoices i 
+      ON v.vendor_id = i.vendor_id)
+
+  SELECT vr.vendor_name, 
+    vr.invoice_total 
+  FROM vendor_rank vr 
+  WHERE vr.rank IN (
+      SELECT vr.rank-1  
+      FROM vendor_rank vr 
+      WHERE vr.vendor_name = 'Compuserve')
+
+UNION
+
+  SELECT vr.vendor_name, 
+    vr.invoice_total 
+  FROM vendor_rank vr 
+  WHERE vr.rank IN (
+      SELECT vr.rank  
+      FROM vendor_rank vr 
+      WHERE vr.vendor_name = 'Compuserve')
+
+UNION
+
+  SELECT vr.vendor_name, 
+    vr.invoice_total 
+  FROM vendor_rank vr 
+  WHERE vr.rank IN (
+      SELECT vr.rank+1  
+      FROM vendor_rank vr
+      WHERE vr.vendor_name = 'Compuserve')
+VENDOR_NAME                                        INVOICE_TOTAL
+-------------------------------------------------- -------------
+Compuserve                                                  9.95 
+Federal Express Corporation                                   10 
+Roadway Package System, Inc                                    6  
+
+
+
+
+> --Qn3
+
+> SELECT AVG(payment_date-invoice_date) 
+FROM invoices 
+WHERE payment_date IS NOT NULL;
+
+
+AVG(PAYMENT_DATE-INVOICE_DATE)
+------------------------------
+                   13.97297297 
+
+
+> --Qn4
+
+> SELECT v.vendor_name, 
+  i.invoice_total, 
+  i.invoice_due_date 
+FROM invoices i JOIN vendors v 
+  ON v.vendor_id = i.vendor_id
+WHERE i.payment_date IS NULL 
+  AND i.invoice_due_date < SYSDATE;
+
+
+VENDOR_NAME                                        INVOICE_TOTAL INVOICE_DUE_DATE
+-------------------------------------------------- ------------- ----------------
+Blue Cross                                                   116 22-JUN-14        
+Blue Cross                                                   224 24-JUN-14        
+Blue Cross                                                   224 25-JUN-14        
+Data Reproductions Corp                                    85.31 20-JUL-14        
+Data Reproductions Corp                                    21842 20-JUL-14        
+Cardinal Business Media, Inc.                              90.36 02-JUL-14        
+Ingram                                                      1575 09-JUN-14        
+Ingram                                                    579.42 09-JUN-14        
+Computerworld                                               2433 30-JUN-14        
+Abbey Office Furnishings                                    17.5 13-JUN-14        
+Pacific Bell                                               46.21 29-JUN-14        
+Pacific Bell                                               39.77 28-JUN-14        
+Pacific Bell                                               19.67 27-JUN-14        
+Pacific Bell                                                32.7 26-JUN-14        
+Pacific Bell                                               16.33 25-JUN-14        
+Pacific Bell                                               16.33 24-JUN-14        
+Wells Fargo Bank                                             662 24-JUN-14        
+Compuserve                                                  9.95 25-JUN-14        
+Coffee Break Service                                        41.8 11-JUL-14        
+Ford Motor Credit Company                                  503.2 18-JUN-14        
+Malloy Lithographing Inc                                20551.18 30-JUN-14        
+Malloy Lithographing Inc                                10976.06 17-JUL-14        
+Roadway Package System, Inc                                    6 21-JUN-14        
+Zylka Design                                              313.55 09-JUL-14        
+Zylka Design                                              904.14 09-JUL-14        
+Zylka Design                                             1962.13 10-JUL-14        
+United Parcel Service                                     2312.2 26-JUN-14        
+United Parcel Service                                    1927.54 19-JUN-14        
+Federal Express Corporation                                 61.5 29-JUN-14        
+Federal Express Corporation                                  158 28-JUN-14        
+Federal Express Corporation                                26.75 25-JUN-14        
+Federal Express Corporation                                 23.5 24-JUN-14        
+Federal Express Corporation                                52.25 23-JUN-14        
+Federal Express Corporation                                109.5 22-JUN-14        
+Federal Express Corporation                                   10 19-JUN-14        
+Federal Express Corporation                                30.75 29-JUN-14        
+Federal Express Corporation                                67.92 25-JUN-14        
+Federal Express Corporation                                59.97 24-JUN-14        
+Federal Express Corporation                                26.25 23-JUN-14        
+Federal Express Corporation                                 42.5 21-JUN-14        
+
+
+ 40 rows selected 
+
+
+> --Qn5
+
+
+> SELECT * FROM (
+  SELECT v.vendor_state, SUM(i.invoice_total) AS total_invoices
+  FROM vendors v JOIN invoices i 
+    ON v.vendor_id = i.vendor_id 
+  GROUP BY v.vendor_state
+  ORDER BY total_invoices DESC)
+WHERE ROWNUM<=5;
+
+
+VENDOR_STATE TOTAL_INVOICES
+------------ --------------
+MI                141819.72 
+CA                 37453.35 
+NV                 25362.46 
+TN                  4378.02 
+TX                  2154.42 
+
+
+
+> --Qn6
+
+> SELECT to_char(payment_date, 'DAY') AS WEEKDAY , 
+  COUNT(payment_date) 
+FROM invoices 
+WHERE payment_date IS NOT NULL 
+  GROUP BY to_char(payment_date, 'DAY');
+
+
+WEEKDAY   COUNT(PAYMENT_DATE)
+--------- -------------------
+SATURDAY                   10 
+THURSDAY                    6 
+TUESDAY                    15 
+WEDNESDAY                  13 
+SUNDAY                     10 
+MONDAY                     12 
+FRIDAY                      8 
+
+
+ 7 rows selected 
+
+
+> --Qn7
+
+> SELECT  DISTINCT vendor_name, 
+    'ACTIVE' AS invoice_status 
+  FROM vendors v JOIN invoices i 
+    ON v.vendor_id = i.vendor_id
+
+UNION
+
+  SELECT DISTINCT vendor_name, 
+    'INACTIVE' AS invoice_status 
+  FROM vendors 
+  WHERE vendor_id NOT IN
+    (SELECT DISTINCT vendor_id 
+     FROM invoices);
+
+
+VENDOR_NAME                                        INVOICE_STATUS
+-------------------------------------------------- --------------
+ASC Signs                                          INACTIVE       
+AT&T                                               INACTIVE       
+Abbey Office Furnishings                           ACTIVE         
+American Booksellers Assoc                         INACTIVE       
+American Express                                   INACTIVE       
+Ascom Hasler Mailing Systems                       INACTIVE       
+Aztek Label                                        INACTIVE       
+BFI Industries                                     INACTIVE       
+Baker & Taylor Books                               INACTIVE       
+Bertelsmann Industry Svcs. Inc                     ACTIVE         
+Bill Jones                                         INACTIVE       
+Bill Marvin Electric Inc                           INACTIVE       
+Blanchard & Johnson Associates                     INACTIVE       
+Blue Cross                                         ACTIVE         
+Blue Shield of California                          INACTIVE       
+Boucher Communications Inc                         INACTIVE       
+Cahners Publishing Company                         ACTIVE         
+Cal State Termite                                  INACTIVE       
+California Business Machines                       INACTIVE       
+California Chamber Of Commerce                     INACTIVE       
+California Data Marketing                          INACTIVE       
+Capital Resource Credit                            INACTIVE       
+Cardinal Business Media, Inc.                      ACTIVE         
+Champion Printing Company                          INACTIVE       
+City Of Fresno                                     INACTIVE       
+Cmg Information Services                           INACTIVE       
+Coffee Break Service                               ACTIVE         
+Compuserve                                         ACTIVE         
+Computer Library                                   INACTIVE       
+Computerworld                                      ACTIVE         
+Costco                                             INACTIVE       
+Courier Companies, Inc                             INACTIVE       
+Crown Printing                                     INACTIVE       
+Custom Printing Company                            INACTIVE       
+DMV Renewal                                        INACTIVE       
+Data Reproductions Corp                            ACTIVE         
+Dataforms/West                                     INACTIVE       
+Dean Witter Reynolds                               ACTIVE         
+Digital Dreamworks                                 ACTIVE         
+Diversified Printing & Pub                         INACTIVE       
+Dristas Groom & McCormick                          ACTIVE         
+Edward Data Services                               ACTIVE         
+Enterprise Communications Inc                      INACTIVE       
+Evans Executone Inc                                ACTIVE         
+Executive Office Products                          INACTIVE       
+Expedata Inc                                       INACTIVE       
+Federal Express Corporation                        ACTIVE         
+Ford Motor Credit Company                          ACTIVE         
+Franchise Tax Board                                ACTIVE         
+Frank E Wilber Co                                  INACTIVE       
+Fresno County Tax Collector                        ACTIVE         
+Fresno Credit Bureau                               INACTIVE       
+Fresno Photoengraving Company                      INACTIVE       
+Fresno Rack & Shelving Inc                         INACTIVE       
+Gary McKeighan Insurance                           INACTIVE       
+Golden Eagle Insurance Co                          INACTIVE       
+Gostanian General Building                         ACTIVE         
+Graylift                                           INACTIVE       
+IBM                                                ACTIVE         
+Ingram                                             ACTIVE         
+Internal Revenue Service                           INACTIVE       
+Jobtrak                                            INACTIVE       
+Kent H Landsberg Co                                INACTIVE       
+Leslie Company                                     INACTIVE       
+Lou Gentile's Flower Basket                        INACTIVE       
+Malloy Lithographing Inc                           ACTIVE         
+McKesson Water Products                            INACTIVE       
+Mcgraw Hill Companies                              INACTIVE       
+Micro Center                                       INACTIVE       
+Nat Assoc of College Stores                        INACTIVE       
+National Information Data Ctr                      INACTIVE       
+Naylor Publications Inc                            INACTIVE       
+Net Asset, Llc                                     INACTIVE       
+Newbrige Book Clubs                                INACTIVE       
+Nielson                                            INACTIVE       
+Office Depot                                       INACTIVE       
+Opamp Technical Books                              INACTIVE       
+Open Horizons Publishing                           INACTIVE       
+Pacific Bell                                       ACTIVE         
+Pacific Gas & Electric                             INACTIVE       
+Ph Photographic Services                           INACTIVE       
+Pollstar                                           ACTIVE         
+Postmaster                                         ACTIVE         
+Publishers Marketing Assoc                         INACTIVE       
+Publishers Weekly                                  INACTIVE       
+Quality Education Data                             INACTIVE       
+RR Bowker                                          INACTIVE       
+Register of Copyrights                             INACTIVE       
+Reiter's Scientific & Pro Books                    ACTIVE         
+Retirement Plan Consultants                        INACTIVE       
+Rich Advertising                                   INACTIVE       
+Roadway Package System, Inc                        ACTIVE         
+Robbins Mobile Lock And Key                        INACTIVE       
+Shields Design                                     INACTIVE       
+Simon Direct Inc                                   INACTIVE       
+Small Press                                        INACTIVE       
+Springhouse Corp                                   INACTIVE       
+State Board Of Equalization                        INACTIVE       
+State of California                                INACTIVE       
+Suburban Propane                                   ACTIVE         
+Texaco                                             INACTIVE       
+The Drawing Board                                  INACTIVE       
+The Fresno Bee                                     INACTIVE       
+The Library Ltd                                    INACTIVE       
+The Mailers Guide Co                               INACTIVE       
+The Presort Center                                 INACTIVE       
+The Windows Deck                                   INACTIVE       
+Towne Advertiser's Mailing Svcs                    INACTIVE       
+US Postal Service                                  INACTIVE       
+United Parcel Service                              ACTIVE         
+Unocal                                             INACTIVE       
+Valprint                                           INACTIVE       
+Venture Communications Int'l                       INACTIVE       
+Vision Envelope & Printing                         INACTIVE       
+Wakefield Co                                       ACTIVE         
+Wang Laboratories, Inc.                            ACTIVE         
+Wells Fargo Bank                                   ACTIVE         
+Yale Industrial Trucks-Fresno                      INACTIVE       
+Yesmed, Inc                                        ACTIVE         
+Zee Medical Service Co                             INACTIVE       
+Zip Print & Copy Center                            INACTIVE       
+Zylka Design                                       ACTIVE         
+
+
+ 122 rows selected 
+
+
+> --Qn8
+
+> UPDATE invoices 
+  SET terms_id = 4 
+WHERE vendor_id = 
+  (SELECT vendor_id 
+   FROM vendors 
+   WHERE vendor_name = 'IBM');
+
+
+2 rows updated.

@@ -6,6 +6,8 @@
 
 package controller;
 
+import dao.ThesisDAO;
+import dao.ThesisDAOImpl;
 import dao.UserDAO;
 import dao.UserDAOImpl;
 import java.util.ArrayList;
@@ -14,6 +16,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ComponentSystemEvent;
+import model.ThesisBean;
 import model.UserBean;
 
 /**
@@ -24,20 +27,22 @@ import model.UserBean;
 @SessionScoped
 public class UpdateController {
     
-    private UserBean theModel;
+    private UserBean theUserModel;
+    private ThesisBean theThesisModel;
     private String updateStatus;
     
     public UpdateController() {
-        theModel = new UserBean();
-        theModel.setIsLoggedIn("NotLoggedIn");
+        theUserModel = new UserBean();
+        theThesisModel = new ThesisBean();
+        theUserModel.setIsLoggedIn("NotLoggedIn");
     }
     
-    public UserBean getTheModel() {
-        return theModel;
+    public UserBean getTheUserModel() {
+        return theUserModel;
     }
 
-    public void setTheModel(UserBean theModel) {
-        this.theModel = theModel;
+    public void setTheUserModel(UserBean theUserModel) {
+        this.theUserModel = theUserModel;
     }
 
     public String getUpdateStatus() {
@@ -48,75 +53,76 @@ public class UpdateController {
         this.updateStatus = updateStatus;
     }
     
-    public String retrieveProfile(String userName) {
-        UserDAO aProjectDAO = new UserDAOImpl();
-        ArrayList result = aProjectDAO.findByUserName(userName);
-        theModel = (UserBean) result.get(0);
-        if (theModel != null) 
+    public String retrieveThesis(String userName, String courseNo) {
+        System.out.println("in retrieveThesis method");
+        System.out.println("userName ="+userName);
+        System.err.println("courseNo = "+courseNo);
+        ThesisDAO aSubmissionDAO = new ThesisDAOImpl();
+        ArrayList result = aSubmissionDAO.findByStudentIDCourseID(userName, courseNo);
+        theThesisModel = (ThesisBean) result.get(0);
+        if (theThesisModel != null) 
         {
-            theModel.setIsLoggedIn("LoggedIn");
-            return "update.xhtml";
+            theUserModel.setIsLoggedIn("LoggedIn");
+            return "updateThesis.xhtml";
         }
         else
         {
-            theModel.setIsLoggedIn("NotLoggedIn");
+            theUserModel.setIsLoggedIn("NotLoggedIn");
             return "error.xhtml";
         }
     }
     
-    public void updateThis() {
+    public void updateThis(String username) {
         
-        String first = theModel.getFirstName();
-        String last = theModel.getLastName();
-        String pwd = theModel.getPassword();
-        String confPwd = theModel.getConfirmPassword();
-        String email = theModel.getEmail();
-        String secQn = theModel.getSecurityQuestion();
-        String secAns = theModel.getSecurityAnswer();
+//        String first = theUserModel.getFirstName();
+//        String last = theUserModel.getLastName();
+//        String pwd = theUserModel.getPassword();
+//        String confPwd = theUserModel.getConfirmPassword();
+//        String email = theUserModel.getEmail();
+//        String secQn = theUserModel.getSecurityQuestion();
+//        String secAns = theUserModel.getSecurityAnswer();
         
-        UserDAO aProjectDAO = new UserDAOImpl();
+        String courseNo = theThesisModel.getCourseID();
+        String semester = theThesisModel.getSemesterName();
+        String keywords = theThesisModel.getKeywords();
+        String liveLink = theThesisModel.getLiveLink();
+        String screenCastLink = theThesisModel.getScreencastLink();
+        String committeeChair = theThesisModel.getCommitteeChair();
+        String committeeMember1 = theThesisModel.getCommitteMember1();
+        String committeeMember2 = theThesisModel.getCommitteMember2();
+        String committeeMember3 = theThesisModel.getCommitteMember3();
+        String projectAbstract = theThesisModel.getProjectAbstract();
+        String deliverableLink = theThesisModel.getDeliverableLink();
+        
+        ThesisDAO anUpdateDAO = new ThesisDAOImpl();
         
         
-        if(first.length()==0){
-           updateStatus = "The first name field cannot be left blank. Please enter your first name"; 
-        }
-        else if(first.length()<2 || first.length()>25){
-            updateStatus = "Your first name has to be between 2 and 25 letters long";
-        }
-        else if(last.length()==0){
-           updateStatus = "The last name field cannot be left blank. Please enter your last name"; 
-        }
-        else if(last.length()<2 || last.length()>25){
-            updateStatus = "Your last name has to be between 2 and 25 letters long";
-        }
-        else if(pwd.length()==0){
-           updateStatus = "A password is required for an account. Please enter a password for your account"; 
-        }
-        else if(pwd.length()<8){
-           updateStatus = "The password should have at least 8 characters"; 
-        }
-        else if(confPwd.length()==0){
-           updateStatus = "Please confirm the password you have entered"; 
-        }
-        else if(!pwd.equals(confPwd)){
-            updateStatus = "The password and the confirmation password doesn't match";
-        }
-        else if(email.length()==0){
-           updateStatus = "A valid email address is required for an account. Please enter your email id"; 
-        }
-        else if(secQn.length()==0){
-           updateStatus = "Please provide a security question for account recovery processes."; 
-        }
-        else if(secAns.length()==0){
-           updateStatus = "Please give an answer for the security question you gave."; 
-        }
+        if (courseNo.length() == 0) {
+            setUpdateStatus("Please enter your course number");
+        } else if (semester.length() == 0) {
+            setUpdateStatus("Please enter the current semester");
+        } else if (keywords.length() == 0) {
+            setUpdateStatus("Please enter a few keywords separated by comma");
+        } else if (liveLink.length() == 0) {
+            setUpdateStatus("Please enter the live link for the work");
+        } else if (screenCastLink.length() == 0) {
+            setUpdateStatus("Please enter a the link to your screencast");
+        } else if (committeeChair.length() == 0) {
+            setUpdateStatus("Please enter the name of the assigned committe chair");
+        } else if (committeeMember1.length() == 0 || committeeMember2.length() == 0 || committeeMember3.length() == 0) {
+            setUpdateStatus("Please enter names of your committee members");
+        } else if (projectAbstract.length() == 0) {
+            setUpdateStatus("Please paste your abstract in the space provided");
+        } //        else if(deliverableLink.length()==0){
+        //            setFormValidationMessage("Please upload your deliverables"); 
+        //        }
         else{
             
-        int status = aProjectDAO.updateProfile(theModel); 
+        int status = anUpdateDAO.updateThesis(theThesisModel, username); 
         if (status != 0) {
-            updateStatus = "Record updated successfully ...";
+            updateStatus = "Your submission has been updated successfully!";
         } else {
-            updateStatus = "Record update failed!";
+            updateStatus = "Could not update your submission. Please check your updates.";
         }
         }
         
@@ -125,7 +131,7 @@ public class UpdateController {
     public String isLoggedInCheck(ComponentSystemEvent event) {
         String navi = null;
 
-        if (!theModel.getIsLoggedIn().equals("LoggedIn")) {
+        if (!theUserModel.getIsLoggedIn().equals("LoggedIn")) {
 
             FacesContext fc = FacesContext.getCurrentInstance();
             ConfigurableNavigationHandler nav = (ConfigurableNavigationHandler) fc.getApplication().getNavigationHandler();
@@ -134,5 +140,19 @@ public class UpdateController {
         }
 
         return navi;
+    }
+
+    /**
+     * @return the theThesisModel
+     */
+    public ThesisBean getTheThesisModel() {
+        return theThesisModel;
+    }
+
+    /**
+     * @param theThesisModel the theThesisModel to set
+     */
+    public void setTheThesisModel(ThesisBean theThesisModel) {
+        this.theThesisModel = theThesisModel;
     }
 }

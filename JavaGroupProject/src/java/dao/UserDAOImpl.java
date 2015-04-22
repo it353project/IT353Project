@@ -38,9 +38,11 @@ public class UserDAOImpl implements UserDAO {
             String myDB = "jdbc:derby://localhost:1527/IT353";
             Connection DBConn = DriverManager.getConnection(myDB, "itkstu", "student");
 
-            String insertString;
+            String accountInsertString;
             Statement stmt = DBConn.createStatement();
-            insertString = "INSERT INTO IT353.ACCOUNT VALUES (2, '"
+            
+            int nextAccountID = findNextSequenceValue("ACCOUNT_ID_SEQ");
+            accountInsertString = "INSERT INTO IT353.ACCOUNT VALUES (" + nextAccountID + ", '"
                     + aSignUp.getFirstName()
                     + "','" + aSignUp.getLastName()
                     + "','" + aSignUp.getPassword()
@@ -52,10 +54,22 @@ public class UserDAOImpl implements UserDAO {
                     + "','" + aSignUp.getUserName()
                     + "')";
 
-            rowCount = stmt.executeUpdate(insertString);
-            System.out.println("insert string =" + insertString);
+            rowCount = stmt.executeUpdate(accountInsertString);
+            System.out.println("insert string =" + accountInsertString);
             System.out.println(rowCount + " row(s) inserted");
+            System.out.println("Account Table insert completed");
+            
+            int nextRequestID = findNextSequenceValue("REQUEST_ID_SEQ");
+            String requestInsertString = "INSERT INTO IT353.REQUEST VALUES (" + nextRequestID + ", "
+                    + nextAccountID
+                    + ",'" + aSignUp.getAccountJustification()
+                    + "')";
 
+            rowCount = stmt.executeUpdate(requestInsertString);
+            System.out.println("insert string =" + requestInsertString);
+            System.out.println(rowCount + " row(s) inserted");
+            System.out.println("Request Table insert completed");
+            
             DBConn.close();
 
         } catch (SQLException e) {
@@ -63,6 +77,41 @@ public class UserDAOImpl implements UserDAO {
             System.err.println(e.getMessage());
         }
         return rowCount;
+    }
+    
+    private int findNextSequenceValue(String sequenceName) {
+
+        sequenceName = sequenceName.trim().toUpperCase();
+        System.out.println("sequence name = " + sequenceName);
+
+        int nextValue = 0;
+
+        String retrieveIDQuery = "VALUES NEXT VALUE FOR " + sequenceName;
+
+        try {
+            DBHelper.loadDriver("org.apache.derby.jdbc.ClientDriver");
+//            DBHelper.loadDriver("oracle.jdbc.driver.OracleDriver");
+            // if doing the above in Oracle: DBHelper.loadDriver("oracle.jdbc.driver.OracleDriver");
+            String myDB = "jdbc:derby://localhost:1527/IT353";
+//            String myDB = "jdbc:oracle:thin:@oracle.itk.ilstu.edu:1521:ora478";
+            // if doing the above in Oracle:  String myDB = "jdbc:oracle:thin:@oracle.itk.ilstu.edu:1521:ora478";
+            Connection DBConn = DBHelper.connect2DB(myDB, "itkstu", "student");
+            // With the connection made, create a statement to talk to the DB server.
+            // Create a SQL statement to query, retrieve the rows one by one (by going to the
+            // columns), and formulate the result string to send back to the client.
+            Statement stmt = DBConn.createStatement();
+
+            ResultSet rs = stmt.executeQuery(retrieveIDQuery);
+            while (rs.next()) {
+                nextValue = rs.getInt(1);
+            }
+            DBConn.close();
+        } catch (SQLException e) {
+            System.err.println("ERROR: Problems with SQL select in findNextSequenceValue()");
+            System.err.println(e.getMessage());
+        }
+        System.out.println("next value = " + nextValue);
+        return nextValue;
     }
 
     //used in SignUpController for checking if the user name is already registered in the system.
@@ -162,6 +211,39 @@ public class UserDAOImpl implements UserDAO {
             System.err.println(e.getMessage());
         }
         return pendingAccountsCount;
+    }
+    
+        //used in LoginController for validating the user while logging in
+    @Override
+    public int findDeniedAccount(UserBean aLogin) {
+        String userName = aLogin.getUserName();
+        String password = aLogin.getPassword();
+
+        String query = "SELECT COUNT(*) AS DENIEDUSERCOUNT FROM IT353.ACCOUNT ";
+        query += "WHERE ulid  = '" + userName + "' AND password = '" + password + "' AND accountstatus = 'DENIED'";
+
+        int deniedAccountsCount = 0;
+        try {
+            DBHelper.loadDriver("org.apache.derby.jdbc.ClientDriver");
+            // if doing the above in Oracle: DBHelper.loadDriver("oracle.jdbc.driver.OracleDriver");
+            String myDB = "jdbc:derby://localhost:1527/IT353";
+            // if doing the above in Oracle:  String myDB = "jdbc:oracle:thin:@oracle.itk.ilstu.edu:1521:ora478";
+            Connection DBConn = DBHelper.connect2DB(myDB, "itkstu", "student");
+            // With the connection made, create a statement to talk to the DB server.
+            // Create a SQL statement to query, retrieve the rows one by one (by going to the
+            // columns), and formulate the result string to send back to the client.
+            Statement stmt = DBConn.createStatement();
+            ResultSet rs = stmt.executeQuery(query);
+            while (rs.next()) {
+                deniedAccountsCount = Integer.parseInt(rs.getString("DENIEDUSERCOUNT"));
+            }
+            System.out.println("denied user count =" + deniedAccountsCount);
+            DBConn.close();
+        } catch (SQLException e) {
+            System.err.println("ERROR: Problems with SQL select in findAccount()");
+            System.err.println(e.getMessage());
+        }
+        return deniedAccountsCount;
     }
 
     //used in LoginController for finding the role of the user while logging in. 

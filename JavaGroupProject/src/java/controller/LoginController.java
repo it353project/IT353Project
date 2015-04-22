@@ -32,6 +32,7 @@ public class LoginController {
     private int attemptCount;
 
     public LoginController() {
+//        loginValidaton = "";
         theModel = new UserBean();
         attemptCount = 1;
     }
@@ -81,16 +82,24 @@ public class LoginController {
 
     public String authenticateUser() {
         String validationMessage = null;
-
+        System.out.println("in authenticateUser()");
         String uid = theModel.getUserName();
         String pwd = theModel.getPassword();
 
+        System.out.println("uid=" + uid);
+        System.out.println("pwd=" + pwd);
+
         if (uid.length() == 0) {
+
             loginValidaton = "Please enter your ULID to login";
+            System.out.println("in authenticateUser()1: loginValidaton=" + loginValidaton);
         } else if (pwd.length() == 0) {
+
             loginValidaton = "Please enter your password.";
+            System.out.println("in authenticateUser()2: loginValidaton=" + loginValidaton);
         } else {
             loginValidaton = "";
+            System.out.println("in authenticateUser()3: loginValidaton=" + loginValidaton);
             validationMessage = findAccount();
         }
         return validationMessage;
@@ -98,18 +107,18 @@ public class LoginController {
 
     public String findAccount() {
         UserDAO aLoginDAO = new UserDAOImpl();
-        if (attemptCount < 3) 
-        {
+        if (attemptCount < 3) {
             int rowCount = aLoginDAO.findAccount(theModel); // Doing anything with the object after this?
             if (rowCount >= 1) //a user with approved account found
             {
                 theModel.setIsLoggedIn("LoggedIn");
                 attemptCount = 0;
                 String accountType = aLoginDAO.findUserAccountType(theModel);
+                System.out.println("Account type returned =" + accountType);
                 if (accountType.equals("admin")) //the user is an admin
                 {
                     return "adminLandingPage.xhtml";
-                } else  //user is a student
+                } else //user is a student
                 {
                     return "studentLandingPage.xhtml";
                 }
@@ -118,10 +127,14 @@ public class LoginController {
             {
                 theModel.setIsLoggedIn("NotLoggedIn");
                 int pendingRowCount = aLoginDAO.findPendingAccount(theModel);
+                int deniedRowCount = aLoginDAO.findDeniedAccount(theModel);
                 if (pendingRowCount >= 1) //the user account in pending status
                 {
-                    loginValidaton = "Your account is not yet approved by the Admin. Please wait.";
-                } else //incorrect ulid/pwd
+                    loginValidaton = "Your account request is not yet approved. Please wait or contact the admin.";
+                } else if (deniedRowCount >= 1) //the user account in denied status
+                {
+                    loginValidaton = "Your account request has been denied. Please contact the  admin.";
+                } else//incorrect ulid/pwd
                 {
                     attemptCount++;
                     loginValidaton = "The username and/or password entered is incorrect. Please try again.";
@@ -146,7 +159,7 @@ public class LoginController {
 
     public String recoverPassword() {
         String ulid = theModel.getUserName();
-        
+
         UserDAO aRecovery = new UserDAOImpl();
         int rowCount = aRecovery.checkUserName(ulid);
         if (rowCount <= 0) {

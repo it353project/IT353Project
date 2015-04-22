@@ -27,7 +27,8 @@ public class ThesisBean {
     private String uploadDate;
     private int numberOfViews;
     private int downloadsCount;
-    private String submissionStatus;    
+    private String submissionStatus;
+    private byte[] uploadedFile;
 
     
     public ThesisBean(){
@@ -315,6 +316,20 @@ public class ThesisBean {
             submissionStatus = submissionStatus.replace("'", "''");
         }
         this.submissionStatus = submissionStatus;
+    }
+
+    /**
+     * @return the uploadedFile
+     */
+    public byte[] getUploadedFile() {
+        return uploadedFile;
+    }
+
+    /**
+     * @param uploadedFile the uploadedFile to set
+     */
+    public void setUploadedFile(byte[] uploadedFile) {
+        this.uploadedFile = uploadedFile;
     }
     
     

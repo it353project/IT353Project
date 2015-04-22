@@ -121,6 +121,8 @@ public class SignUpController {
         String pwd = theModel.getPassword();
 //        String confPwd = theModel.getConfirmPassword();
         String email = theModel.getEmail();
+        
+        String emailName = email.substring(0, email.indexOf('@'));
 
         String type = theModel.getAccountType();
         
@@ -163,6 +165,9 @@ public class SignUpController {
         else if(email.length()==0){
            signUpValidaton = "A valid email address is required to create an account. Please enter your email id"; 
         }
+//        else if(!emailName.equalsIgnoreCase(uid)){
+//            signUpValidaton = "The ULID and the email address doesn't match. Please check your entries";
+//        }
         else if(type.length()==0){
             signUpValidaton = "Please select a type of account your wish to sign up for.";
         }
